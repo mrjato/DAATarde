@@ -7,7 +7,6 @@ import java.util.Arrays;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -17,53 +16,48 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
-import com.google.common.annotations.VisibleForTesting;
-
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "articles")
 public abstract class Article {
 
-	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue
     private Long id;
 
     @Column(length = 50, nullable = false)
-    private String name;
+    protected String name;
 
     @Column(length = 500, nullable = false)
-    private String description;
+    protected String description;
 
     @Column(nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    private LocalDate date;
+    protected LocalDate date;
 
     @Lob
     @Column(nullable = false)
-    private Byte[ ] picture;
+    protected Byte[ ] picture;
 
-    public Article( ) { }
-    
-    public Article(String name, String description, LocalDate date, Byte[] picture) {
-    	notNull(name, "Article's name cannot be null");
-    	notNull(description, "Article's description cannot be null");
-    	notNull(date, "Article's date cannot be null");
-    	notNull(picture, "Article's picture cannot be null");
-    	
-		this.name = name;
-		this.description = description;
-		this.date = date;
-		this.picture = picture;
-	}
-    
-    @VisibleForTesting
-    public Article(final String name) {
-    	this.name        = name;
-    	this.description = "";
-    	this.date        = new LocalDate();
-    	this.picture     = new Byte[] { 0 };
+    protected Article( ) { }
+
+    protected Article(
+        final String    name,
+        final String    description,
+        final LocalDate date,
+        final Byte[ ]   picture
+    ) {
+        notNull(name, "Article's name cannot be null");
+        notNull(description, "Article's description cannot be null");
+        notNull(date, "Article's date cannot be null");
+        notNull(picture, "Article's picture cannot be null");
+
+        this.name        = name;
+        this.description = description;
+        this.date        = date;
+        this.picture     = picture;
     }
-    
+
     public Long getId( ) {
         return id;
     }
@@ -84,24 +78,20 @@ public abstract class Article {
         return picture;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
+        notNull(description, "Article's description cannot be null");
         this.description = description;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setPicture(final Byte[ ] picture) {
+        notNull(picture, "Article's picture cannot be null");
+        this.picture = Arrays.copyOf(picture, picture.length);
     }
 
-    public void setPicture(Byte[ ] picture) {
-        this.picture = picture;
-    }
-    
+    @Override
+    public abstract int hashCode( );
+
+    @Override
+    public abstract boolean equals(final Object obj);
+
 }

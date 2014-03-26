@@ -11,7 +11,7 @@ public abstract class DatabaseTest {
 
     protected static EntityManagerFactory emFactory;
     protected static EntityManager        entityManager;
-    
+
     @Before
     public void createEntityManager( ) {
         emFactory = Persistence.createEntityManagerFactory("testing");
