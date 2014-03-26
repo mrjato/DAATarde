@@ -2,7 +2,6 @@ package es.uvigo.esei.daa.tarde;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +13,9 @@ public abstract class DatabaseTest {
 
     @Before
     public void createEntityManager( ) {
-        emFactory = Persistence.createEntityManagerFactory("testing");
+        PersistenceListener.setEmFactory("testing");
+        
+        emFactory = PersistenceListener.getEntityManagerFactory();
         entityManager = emFactory.createEntityManager();
     }
 

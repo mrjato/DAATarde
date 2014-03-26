@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -56,7 +57,7 @@ public class MovieDAOTest extends DatabaseTest {
 
     @Before
     public void createMovieDAO( ) {
-        dao = new MovieDAO(emFactory);
+        dao = new MovieDAO();
     }
 
     @Before
@@ -93,6 +94,29 @@ public class MovieDAOTest extends DatabaseTest {
         final String wortThree = three.getName().split("\\s+")[0];
         final List<Movie> threeFound = dao.findByName(wortThree);
         assertThat(threeFound).contains(three);
+    }
+    
+    @Test
+    public void movie_dao_finds_movies_ignoring_case( ) {
+        final String word = one.getName().split("\\s+")[0];
+        
+        final List<Movie> upperCasedWord = dao.findByName(word.toUpperCase());
+        assertThat(upperCasedWord).contains(one);
+        
+        final List<Movie> lowerCasedWord = dao.findByName(word.toLowerCase());
+        assertThat(lowerCasedWord).contains(one);
+        
+        final Random random = new Random(); 
+        final StringBuilder builder = new StringBuilder();
+        for (char c : word.toCharArray()) {
+             if (random.nextBoolean())
+                 builder.append(Character.toUpperCase(c));
+             else
+                 builder.append(Character.toLowerCase(c));
+        }
+        
+        final List<Movie> randomizedCaseWord = dao.findByName(builder.toString());
+        assertThat(randomizedCaseWord).contains(one);
     }
 
     @Test

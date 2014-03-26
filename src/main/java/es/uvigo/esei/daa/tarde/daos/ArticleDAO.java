@@ -14,12 +14,8 @@ public abstract class ArticleDAO<T extends Article> {
 
     protected final EntityManagerFactory emFactory;
 
-    protected ArticleDAO( ) {
+    public ArticleDAO( ) {
         emFactory = PersistenceListener.getEntityManagerFactory();
-    }
-
-    protected ArticleDAO(final EntityManagerFactory emFactory) {
-        this.emFactory = emFactory;
     }
     
     public List<T> findByName(final String name) {
@@ -28,9 +24,9 @@ public abstract class ArticleDAO<T extends Article> {
         try {
             
             return manager.createQuery(
-                "SELECT a FROM " + getEntityName() + " a WHERE a.name LIKE :name",
+                "SELECT a FROM " + getEntityName() + " a WHERE UPPER(a.name) LIKE :name",
                 getGenericClass()
-            ).setParameter("name", "%" + name + "%").getResultList();
+            ).setParameter("name", "%" + name.toUpperCase() + "%").getResultList();
             
         } finally {
             if (manager.isOpen()) manager.close();

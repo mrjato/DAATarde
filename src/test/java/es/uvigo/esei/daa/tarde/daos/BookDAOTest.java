@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -56,7 +57,7 @@ public class BookDAOTest extends DatabaseTest {
 
     @Before
     public void createBookDAO( ) {
-        dao = new BookDAO(emFactory);
+        dao = new BookDAO();
     }
 
     @Before
@@ -80,7 +81,8 @@ public class BookDAOTest extends DatabaseTest {
         assertThat(threeFound).contains(three);
     }
 
-    @Test public void book_dao_can_find_books_by_approximate_title( ) {
+    @Test
+    public void book_dao_can_find_books_by_approximate_title( ) {
         final String wordOne = one.getName().split("\\s+")[0];
         final List<Book> oneFound = dao.findByName(wordOne);
         assertThat(oneFound).contains(one);
@@ -92,6 +94,29 @@ public class BookDAOTest extends DatabaseTest {
         final String wortThree = three.getName().split("\\s+")[0];
         final List<Book> threeFound = dao.findByName(wortThree);
         assertThat(threeFound).contains(three);
+    }
+    
+    @Test
+    public void book_dao_finds_books_ignoring_case( ) {
+        final String word = one.getName().split("\\s+")[0];
+        
+        final List<Book> upperCasedWord = dao.findByName(word.toUpperCase());
+        assertThat(upperCasedWord).contains(one);
+        
+        final List<Book> lowerCasedWord = dao.findByName(word.toLowerCase());
+        assertThat(lowerCasedWord).contains(one);
+        
+        final Random random = new Random(); 
+        final StringBuilder builder = new StringBuilder();
+        for (char c : word.toCharArray()) {
+             if (random.nextBoolean())
+                 builder.append(Character.toUpperCase(c));
+             else
+                 builder.append(Character.toLowerCase(c));
+        }
+        
+        final List<Book> randomizedCaseWord = dao.findByName(builder.toString());
+        assertThat(randomizedCaseWord).contains(one);
     }
     
     @Test

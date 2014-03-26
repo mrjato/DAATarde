@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -56,7 +57,7 @@ public class MusicStorageDAOTest extends DatabaseTest {
 
     @Before
     public void createMusicStorageDAO( ) {
-        dao = new MusicStorageDAO(emFactory);
+        dao = new MusicStorageDAO();
     }
 
     @Before
@@ -95,6 +96,29 @@ public class MusicStorageDAOTest extends DatabaseTest {
         assertThat(threeFound).contains(three);
     }
 
+    @Test
+    public void music_storage_dao_finds_music_storages_ignoring_case( ) {
+        final String word = one.getName().split("\\s+")[0];
+        
+        final List<MusicStorage> upperCasedWord = dao.findByName(word.toUpperCase());
+        assertThat(upperCasedWord).contains(one);
+        
+        final List<MusicStorage> lowerCasedWord = dao.findByName(word.toLowerCase());
+        assertThat(lowerCasedWord).contains(one);
+        
+        final Random random = new Random(); 
+        final StringBuilder builder = new StringBuilder();
+        for (char c : word.toCharArray()) {
+             if (random.nextBoolean())
+                 builder.append(Character.toUpperCase(c));
+             else
+                 builder.append(Character.toLowerCase(c));
+        }
+        
+        final List<MusicStorage> randomizedCaseWord = dao.findByName(builder.toString());
+        assertThat(randomizedCaseWord).contains(one);
+    }
+    
     @Test
     public void musicStorage_dao_should_return_all_music_storages_when_searching_with_empty_title( ) {
         final List<MusicStorage> empty = dao.findByName("");

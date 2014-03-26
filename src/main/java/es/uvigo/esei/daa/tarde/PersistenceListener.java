@@ -13,7 +13,7 @@ public class PersistenceListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent _) {
-        emFactory = Persistence.createEntityManagerFactory("default");
+        setEmFactory("default");
     }
 
     @Override
@@ -29,6 +29,12 @@ public class PersistenceListener implements ServletContextListener {
         }
 
         return emFactory;
+    }
+    
+    public static void setEmFactory(final String persistenceUnitName) {
+        PersistenceListener.emFactory = Persistence.createEntityManagerFactory(
+            persistenceUnitName
+        );
     }
 
 }
