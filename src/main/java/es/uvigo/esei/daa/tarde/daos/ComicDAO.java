@@ -4,16 +4,16 @@ import javax.persistence.EntityManagerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
 
-import es.uvigo.esei.daa.tarde.entities.Book;
+import es.uvigo.esei.daa.tarde.entities.Comic;
 
-public class BookDAO extends ArticleDAO<Book> {
+public class ComicDAO extends ArticleDAO<Comic> {
 
-    public BookDAO( ) {
+    public ComicDAO( ) {
         super();
     }
 
     @VisibleForTesting
-    BookDAO(final EntityManagerFactory emFactory) {
+    ComicDAO(EntityManagerFactory emFactory) {
         super(emFactory);
     }
 

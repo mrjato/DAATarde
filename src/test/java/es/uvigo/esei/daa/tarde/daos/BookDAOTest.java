@@ -80,9 +80,22 @@ public class BookDAOTest extends DatabaseTest {
         assertThat(threeFound).contains(three);
     }
 
+    @Test public void book_dao_can_find_books_by_approximate_title( ) {
+        final String wordOne = one.getName().split("\\s+")[0];
+        final List<Book> oneFound = dao.findByName(wordOne);
+        assertThat(oneFound).contains(one);
+        
+        final String wordTwo = two.getName().split("\\s+")[0];
+        final List<Book> twoFound = dao.findByName(wordTwo);
+        assertThat(twoFound).contains(two);
+        
+        final String wortThree = three.getName().split("\\s+")[0];
+        final List<Book> threeFound = dao.findByName(wortThree);
+        assertThat(threeFound).contains(three);
+    }
+    
     @Test
-    public void
-        book_dao_should_return_all_books_when_searching_with_empty_title( ) {
+    public void book_dao_should_return_all_books_when_searching_with_empty_title( ) {
         final List<Book> empty = dao.findByName("");
         assertThat(empty).containsOnly(one, two, three);
     }
