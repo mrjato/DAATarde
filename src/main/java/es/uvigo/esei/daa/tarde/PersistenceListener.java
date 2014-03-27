@@ -9,32 +9,36 @@ import javax.servlet.annotation.WebListener;
 @WebListener
 public class PersistenceListener implements ServletContextListener {
 
-    private static EntityManagerFactory emFactory;
+    private static EntityManagerFactory entityManagerFactory;
 
-    @Override
-    public void contextInitialized(ServletContextEvent _) {
-        setEmFactory("default");
+    public static EntityManagerFactory createEntityManagerFactory(
+        final String persistenceUnitName
+    ) {
+        entityManagerFactory = Persistence.createEntityManagerFactory(
+            persistenceUnitName
+        );
+        
+        return entityManagerFactory;
     }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent _) {
-        emFactory.close();
-    }
-
+    
     public static EntityManagerFactory getEntityManagerFactory( ) {
-        if (emFactory == null) {
+        if (entityManagerFactory == null) {
             throw new IllegalStateException(
                 "Context has not yet been initialized."
             );
         }
 
-        return emFactory;
+        return entityManagerFactory;
     }
     
-    public static void setEmFactory(final String persistenceUnitName) {
-        PersistenceListener.emFactory = Persistence.createEntityManagerFactory(
-            persistenceUnitName
-        );
+    @Override
+    public void contextInitialized(final ServletContextEvent _) {
+        createEntityManagerFactory("default");
+    }
+
+    @Override
+    public void contextDestroyed(final ServletContextEvent _) {
+        entityManagerFactory.close();
     }
 
 }

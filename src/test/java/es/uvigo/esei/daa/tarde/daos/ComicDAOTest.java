@@ -14,11 +14,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import es.uvigo.esei.daa.tarde.DatabaseTest;
 import es.uvigo.esei.daa.tarde.entities.Comic;
 
 @RunWith(Parameterized.class)
-public class ComicDAOTest extends DatabaseTest {
+public class ComicDAOTest extends BaseDAOTest {
 
     @Parameters
     public static Collection<Comic[ ]> createComics( ) {

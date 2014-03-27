@@ -4,15 +4,26 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import es.uvigo.esei.daa.tarde.daos.BookDAO;
 import es.uvigo.esei.daa.tarde.entities.Book;
 
 @Path("/books")
 @Produces(MediaType.APPLICATION_JSON)
-public class BooksREST extends ArticlesREST<Book> {
+public class BookResource extends ArticleResource<Book> {
 
-    protected BookDAO createDAO( ) {
+    public BookResource( ) {
+        super();
+    }
+
+    @VisibleForTesting
+    BookResource(final BookDAO dao) {
+        super(dao);
+    }
+
+    protected BookDAO createDefaultDAO( ) {
         return new BookDAO();
     }
-    
+
 }

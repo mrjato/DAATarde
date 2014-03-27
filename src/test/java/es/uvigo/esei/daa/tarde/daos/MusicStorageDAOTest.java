@@ -14,11 +14,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import es.uvigo.esei.daa.tarde.DatabaseTest;
 import es.uvigo.esei.daa.tarde.entities.MusicStorage;
 
 @RunWith(Parameterized.class)
-public class MusicStorageDAOTest extends DatabaseTest {
+public class MusicStorageDAOTest extends BaseDAOTest {
 
     @Parameters
     public static Collection<MusicStorage[ ]> createMusicStorages( ) {
@@ -120,7 +119,7 @@ public class MusicStorageDAOTest extends DatabaseTest {
     }
     
     @Test
-    public void musicStorage_dao_should_return_all_music_storages_when_searching_with_empty_title( ) {
+    public void music_storage_dao_should_return_all_music_storages_when_searching_with_empty_title( ) {
         final List<MusicStorage> empty = dao.findByName("");
         assertThat(empty).containsOnly(one, two, three);
     }

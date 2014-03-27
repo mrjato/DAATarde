@@ -1,22 +1,21 @@
-package es.uvigo.esei.daa.tarde.rest;
+package es.uvigo.esei.daa.tarde.daos;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import org.glassfish.jersey.test.JerseyTest;
 import org.junit.After;
 import org.junit.Before;
 
 import es.uvigo.esei.daa.tarde.PersistenceListener;
 
-public abstract class BaseRESTTest extends JerseyTest {
+public abstract class BaseDAOTest {
 
     protected static EntityManagerFactory emFactory;
     protected static EntityManager        entityManager;
 
     @Before
     public void createEntityManager( ) {
-        PersistenceListener.setEmFactory("testing");
+        PersistenceListener.createEntityManagerFactory("testing");
 
         emFactory = PersistenceListener.getEntityManagerFactory();
         entityManager = emFactory.createEntityManager();
@@ -27,6 +26,5 @@ public abstract class BaseRESTTest extends JerseyTest {
         entityManager.close();
         emFactory.close();
     }
-
 
 }

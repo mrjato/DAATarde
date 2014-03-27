@@ -14,18 +14,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import es.uvigo.esei.daa.tarde.DatabaseTest;
 import es.uvigo.esei.daa.tarde.entities.Movie;
 
 @RunWith(Parameterized.class)
-public class MovieDAOTest extends DatabaseTest {
+public class MovieDAOTest extends BaseDAOTest {
 
     @Parameters
     public static Collection<Movie[ ]> createMovies( ) {
         return Arrays.asList(new Movie[ ][ ] {
             {
                 new Movie("Pulp Fiction", "", new LocalDate(), new Byte[ ] { 0 }),
-                new Movie("Titanic", "", new LocalDate(), new Byte[ ] { 0 }),
+                new Movie("Reservoir Dogs", "", new LocalDate(), new Byte[ ] { 0 }),
                 new Movie("Inglorious Basterds", "", new LocalDate(), new Byte[ ] { 0 })
             },
             { 
@@ -37,7 +36,7 @@ public class MovieDAOTest extends DatabaseTest {
     }
 
     private MovieDAO    dao;
-    
+
     private final Movie one;
     private final Movie two;
     private final Movie three;

@@ -20,16 +20,13 @@ public abstract class ArticleDAO<T extends Article> {
     
     public List<T> findByName(final String name) {
         final EntityManager manager = emFactory.createEntityManager();
-
         try {
-            
             return manager.createQuery(
                 "SELECT a FROM " + getEntityName() + " a WHERE UPPER(a.name) LIKE :name",
                 getGenericClass()
             ).setParameter("name", "%" + name.toUpperCase() + "%").getResultList();
-            
         } finally {
-            if (manager.isOpen()) manager.close();
+            manager.close();
         }
     }
     
@@ -44,7 +41,8 @@ public abstract class ArticleDAO<T extends Article> {
     @SuppressWarnings("unchecked")
     private Class<T> getGenericClass() {
         return (Class<T>) (
-            (ParameterizedType) this.getClass().getGenericSuperclass()
+            (ParameterizedType) getClass().getGenericSuperclass()
         ).getActualTypeArguments()[0];
     }
+
 }

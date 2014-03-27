@@ -14,11 +14,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import es.uvigo.esei.daa.tarde.DatabaseTest;
 import es.uvigo.esei.daa.tarde.entities.Book;
 
 @RunWith(Parameterized.class)
-public class BookDAOTest extends DatabaseTest {
+public class BookDAOTest extends BaseDAOTest {
 
     @Parameters
     public static Collection<Book[ ]> createBooks( ) {
@@ -36,7 +35,7 @@ public class BookDAOTest extends DatabaseTest {
         });
     }
 
-    private BookDAO    dao;
+    private BookDAO dao;
     
     private final Book one;
     private final Book two;
