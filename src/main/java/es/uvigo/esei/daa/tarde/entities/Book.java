@@ -20,7 +20,7 @@ public class Book extends Article {
         final String    description,
         final LocalDate date,
         final Byte[ ]   picture
-    ) {
+            ) {
         super(name, description, date, picture);
     }
 
@@ -33,7 +33,7 @@ public class Book extends Article {
 
         return builder.toHashCode();
     }
-    
+
     @Override
     public final boolean equals(final Object obj) {
         if (obj == this) return true;

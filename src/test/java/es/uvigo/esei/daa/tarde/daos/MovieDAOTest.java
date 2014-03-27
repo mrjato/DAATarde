@@ -23,8 +23,8 @@ public class MovieDAOTest extends BaseDAOTest {
     public static Collection<Movie[ ]> createMovies( ) {
         return Arrays.asList(new Movie[ ][ ] {
             {
-                new Movie("Pulp Fiction", "", new LocalDate(), new Byte[ ] { 0 }),
-                new Movie("Reservoir Dogs", "", new LocalDate(), new Byte[ ] { 0 }),
+                new Movie("Pulp Fiction",        "", new LocalDate(), new Byte[ ] { 0 }),
+                new Movie("Reservoir Dogs",      "", new LocalDate(), new Byte[ ] { 0 }),
                 new Movie("Inglorious Basterds", "", new LocalDate(), new Byte[ ] { 0 })
             },
             { 

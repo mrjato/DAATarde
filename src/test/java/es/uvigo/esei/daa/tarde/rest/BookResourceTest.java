@@ -72,17 +72,17 @@ public class BookResourceTest extends BaseResourceTest {
     private final void populateMockedDAOWithBasicSearches() {
         when(mockedBookDAO.findByName("haskell"))
             .thenReturn(Arrays.asList(
-                new Book("Learn You a Haskell For Great Good", "", new LocalDate(2011, 4, 18), new Byte[ ] { 0 }),
-                new Book("Real World Haskell", "", new LocalDate(2008, 12, 5), new Byte[ ] { 0 }),
+                new Book("Learn You a Haskell For Great Good",          "", new LocalDate(2011, 4, 18), new Byte[ ] { 0 }),
+                new Book("Real World Haskell",                          "", new LocalDate(2008, 12, 5), new Byte[ ] { 0 }),
                 new Book("Beginning Haskell: A Project-Based Approach", "", new LocalDate(2014, 1, 22), new Byte[ ] { 0 })
             ));
         
         when(mockedBookDAO.findByName("scala"))
             .thenReturn(Arrays.asList(
-                new Book("Programming in Scala", "", new LocalDate(2011, 1, 10), new Byte[ ] { 0 }),
+                new Book("Programming in Scala",                                 "", new LocalDate(2011, 1, 10), new Byte[ ] { 0 }),
                 new Book("Functional Programming Patterns in Scala and Clojure", "", new LocalDate(2013, 11, 2), new Byte[ ] { 0 }),
-                new Book("Scala Cookbook", "", new LocalDate(2013, 8, 23), new Byte[ ] { 0 }),
-                new Book("Testing in Scala", "", new LocalDate(2013, 2, 13), new Byte[ ] { 0 })
+                new Book("Scala Cookbook",                                       "", new LocalDate(2013, 8, 23), new Byte[ ] { 0 }),
+                new Book("Testing in Scala",                                     "", new LocalDate(2013, 2, 13), new Byte[ ] { 0 })
             ));
         
         when(mockedBookDAO.findByName("LOLCODE"))

@@ -28,9 +28,9 @@ public class ComicDAOTest extends BaseDAOTest {
                 new Comic("Zipi y Zape", "", new LocalDate(), new Byte[ ] { 0 })
             },
             { 
-                new Comic("Iron Patriot", "", new LocalDate(2014, 3, 26), new Byte[ ] { 0 }),
+                new Comic("Iron Patriot",                "", new LocalDate(2014, 3, 26), new Byte[ ] { 0 }),
                 new Comic("Captain America: Homecoming", "", new LocalDate(2014, 3, 14), new Byte[ ] { 0 }),
-                new Comic("Miracle Man", "", new LocalDate(2014, 3, 26), new Byte[ ] { 0 })
+                new Comic("Miracle Man",                 "", new LocalDate(2014, 3, 26), new Byte[ ] { 0 })
             }
         });
     }

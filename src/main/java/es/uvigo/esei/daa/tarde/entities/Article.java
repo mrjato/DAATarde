@@ -46,7 +46,7 @@ public abstract class Article {
         final String    description,
         final LocalDate date,
         final Byte[ ]   picture
-    ) {
+            ) {
         notNull(name, "Article's name cannot be null");
         notNull(description, "Article's description cannot be null");
         notNull(date, "Article's date cannot be null");
