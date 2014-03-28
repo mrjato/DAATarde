@@ -61,7 +61,7 @@ public class BookResourceTest extends BaseResourceTest {
             .containsExactlyElementsOf(mockedBookDAO.findByName("scala"));
         
         final Response resThree = bookResourceTarget.queryParam(
-            "search", "Haskell"
+            "search", "LOLCODE"
         ).request().get();
         
         assertThat(resThree.getStatus()).isEqualTo(OK_CODE);
