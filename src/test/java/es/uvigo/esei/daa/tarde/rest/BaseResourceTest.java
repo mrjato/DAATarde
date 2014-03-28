@@ -9,7 +9,7 @@ import org.junit.Before;
 public abstract class BaseResourceTest {
 
     protected static final int OK_CODE = Response.Status.OK.getStatusCode();
-    
+
     protected JerseyTest jerseyTest;
 
     @Before

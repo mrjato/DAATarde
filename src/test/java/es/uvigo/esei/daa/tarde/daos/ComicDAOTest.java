@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -14,44 +13,33 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import es.uvigo.esei.daa.tarde.TestUtils;
 import es.uvigo.esei.daa.tarde.entities.Comic;
 
 @RunWith(Parameterized.class)
 public class ComicDAOTest extends BaseDAOTest {
 
-    @Parameters
-    public static Collection<Comic[ ]> createComics( ) {
-        return Arrays.asList(new Comic[ ][ ] {
-            {
-                new Comic("X-Men",       "", new LocalDate(), new Byte[ ] { 0 }),
-                new Comic("Spiderman",   "", new LocalDate(), new Byte[ ] { 0 }),
-                new Comic("Zipi y Zape", "", new LocalDate(), new Byte[ ] { 0 })
-            },
-            { 
-                new Comic("Iron Patriot",                "", new LocalDate(2014, 3, 26), new Byte[ ] { 0 }),
-                new Comic("Captain America: Homecoming", "", new LocalDate(2014, 3, 14), new Byte[ ] { 0 }),
-                new Comic("Miracle Man",                 "", new LocalDate(2014, 3, 26), new Byte[ ] { 0 })
-            }
+    @Parameters(name = "{index}: {0}")
+    public static Collection<Object[ ]> createComicData( ) {
+        return Arrays.asList(new Object[ ][ ] {
+            { "assorted", new Comic[ ] {
+                new Comic("X-Men",       new LocalDate()),
+                new Comic("Spiderman",   new LocalDate()),
+                new Comic("Zipi y Zape", new LocalDate())
+            }},
+            { "marvel", new Comic[ ] {
+                new Comic("Iron Patriot",                new LocalDate(2014, 3, 26)),
+                new Comic("Captain America: Homecoming", new LocalDate(2014, 3, 14)),
+                new Comic("Miracle Man",                 new LocalDate(2014, 3, 26))
+            }}
         });
     }
 
-    private ComicDAO    dao;
-    
-    private final Comic one;
-    private final Comic two;
-    private final Comic three;
+    private ComicDAO dao;
+    private final List<Comic> comicList;
 
-    public ComicDAOTest(final Comic one, final Comic two, final Comic three) {
-        this.one   = one;
-        this.two   = two;
-        this.three = three;
-    }
-
-    private void saveComic(final Comic comic) {
-        if (comic.getId() == null)
-            entityManager.persist(comic);
-        else
-            entityManager.merge(comic);
+    public ComicDAOTest(final String _, final Comic[ ] comicList) {
+        this.comicList = Arrays.asList(comicList);
     }
 
     @Before
@@ -60,68 +48,52 @@ public class ComicDAOTest extends BaseDAOTest {
     }
 
     @Before
-    public void insertComic( ) {
+    public void insertComics( ) {
         entityManager.getTransaction().begin();
-        saveComic(one);
-        saveComic(two);
-        saveComic(three);
+        for (final Comic c : comicList) {
+            if (c.getId() == null) entityManager.persist(c);
+            else                   entityManager.merge(c);
+        }
         entityManager.getTransaction().commit();
     }
 
     @Test
     public void comic_dao_can_find_comics_by_exact_title( ) {
-        final List<Comic> oneFound = dao.findByName(one.getName());
-        assertThat(oneFound).contains(one);
-
-        final List<Comic> twoFound = dao.findByName(two.getName());
-        assertThat(twoFound).contains(two);
-
-        final List<Comic> threeFound = dao.findByName(three.getName());
-        assertThat(threeFound).contains(three);
+        for (final Comic comic : comicList) {
+            final List<Comic> found = dao.findByName(comic.getName());
+            assertThat(found).contains(comic);
+        }
     }
-    
+
     @Test
     public void comic_dao_can_find_comics_by_approximate_title( ) {
-        final String wordOne = one.getName().split("\\s+")[0];
-        final List<Comic> oneFound = dao.findByName(wordOne);
-        assertThat(oneFound).contains(one);
-        
-        final String wordTwo = two.getName().split("\\s+")[0];
-        final List<Comic> twoFound = dao.findByName(wordTwo);
-        assertThat(twoFound).contains(two);
-        
-        final String wortThree = three.getName().split("\\s+")[0];
-        final List<Comic> threeFound = dao.findByName(wortThree);
-        assertThat(threeFound).contains(three);
+        for (final Comic comic : comicList) {
+            final String word = comic.getName().split("\\s+")[0];
+            final List<Comic> found = dao.findByName(word);
+            assertThat(found).contains(comic);
+        }
     }
-    
+
     @Test
     public void comic_dao_finds_comics_ignoring_case( ) {
-        final String word = one.getName().split("\\s+")[0];
-        
-        final List<Comic> upperCasedWord = dao.findByName(word.toUpperCase());
-        assertThat(upperCasedWord).contains(one);
-        
-        final List<Comic> lowerCasedWord = dao.findByName(word.toLowerCase());
-        assertThat(lowerCasedWord).contains(one);
-        
-        final Random random = new Random(); 
-        final StringBuilder builder = new StringBuilder();
-        for (char c : word.toCharArray()) {
-             if (random.nextBoolean())
-                 builder.append(Character.toUpperCase(c));
-             else
-                 builder.append(Character.toLowerCase(c));
+        for (final Comic comic : comicList) {
+            final String word = comic.getName().split("\\s+")[0];
+
+            final List<Comic> upper = dao.findByName(word.toUpperCase());
+            assertThat(upper).contains(comic);
+
+            final List<Comic> lower = dao.findByName(word.toLowerCase());
+            assertThat(lower).contains(comic);
+
+            final List<Comic> rand  = dao.findByName(TestUtils.randomizeCase(word));
+            assertThat(rand).contains(comic);
         }
-        
-        final List<Comic> randomizedCaseWord = dao.findByName(builder.toString());
-        assertThat(randomizedCaseWord).contains(one);
     }
 
     @Test
     public void comic_dao_should_return_all_comic_when_searching_with_empty_title( ) {
         final List<Comic> empty = dao.findByName("");
-        assertThat(empty).containsOnly(one, two, three);
+        assertThat(empty).isEqualTo(comicList);
     }
-    
+
 }

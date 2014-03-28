@@ -24,6 +24,10 @@ public class Movie extends Article {
         super(name, description, date, picture);
     }
 
+    public Movie(final String name, final LocalDate date) {
+        super(name, date);
+    }
+
     @Override
     public final int hashCode( ) {
         final HashCodeBuilder builder = new HashCodeBuilder();
@@ -33,7 +37,7 @@ public class Movie extends Article {
 
         return builder.toHashCode();
     }
-    
+
     @Override
     public final boolean equals(final Object obj) {
         if (obj == this) return true;

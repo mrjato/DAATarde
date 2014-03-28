@@ -17,10 +17,10 @@ public class PersistenceListener implements ServletContextListener {
         entityManagerFactory = Persistence.createEntityManagerFactory(
             persistenceUnitName
         );
-        
+
         return entityManagerFactory;
     }
-    
+
     public static EntityManagerFactory getEntityManagerFactory( ) {
         if (entityManagerFactory == null) {
             throw new IllegalStateException(
@@ -30,7 +30,7 @@ public class PersistenceListener implements ServletContextListener {
 
         return entityManagerFactory;
     }
-    
+
     @Override
     public void contextInitialized(final ServletContextEvent _) {
         createEntityManagerFactory("default");

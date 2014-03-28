@@ -9,24 +9,28 @@ import es.uvigo.esei.daa.tarde.daos.ArticleDAO;
 import es.uvigo.esei.daa.tarde.entities.Article;
 
 public abstract class ArticleResource<T extends Article> {
-    
+
     protected final ArticleDAO<T> dao;
-    
+
     protected ArticleResource( ) {
         dao = createDefaultDAO();
     }
-    
+
     protected ArticleResource(final ArticleDAO<T> dao) {
         this.dao = dao;
     }
-    
+
     protected abstract ArticleDAO<T> createDefaultDAO();
-    
+
     @GET
     public Response search(@QueryParam("search") final String name) {
-        return Response.ok(
-            dao.findByName(name), MediaType.APPLICATION_JSON
-        ).build();
+        try {
+            return Response.ok(
+                dao.findByName(name), MediaType.APPLICATION_JSON
+            ).build();
+        } catch (final Exception _) {
+            return Response.serverError().build();
+        }
     }
 
 }

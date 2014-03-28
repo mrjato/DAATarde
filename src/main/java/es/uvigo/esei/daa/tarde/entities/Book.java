@@ -24,6 +24,10 @@ public class Book extends Article {
         super(name, description, date, picture);
     }
 
+    public Book(final String name, final LocalDate date) {
+        super(name, date);
+    }
+
     @Override
     public final int hashCode( ) {
         final HashCodeBuilder builder = new HashCodeBuilder();

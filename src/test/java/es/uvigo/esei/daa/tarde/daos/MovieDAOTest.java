@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -14,44 +13,60 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import es.uvigo.esei.daa.tarde.TestUtils;
 import es.uvigo.esei.daa.tarde.entities.Movie;
 
 @RunWith(Parameterized.class)
 public class MovieDAOTest extends BaseDAOTest {
 
-    @Parameters
-    public static Collection<Movie[ ]> createMovies( ) {
-        return Arrays.asList(new Movie[ ][ ] {
-            {
-                new Movie("Pulp Fiction",        "", new LocalDate(), new Byte[ ] { 0 }),
-                new Movie("Reservoir Dogs",      "", new LocalDate(), new Byte[ ] { 0 }),
-                new Movie("Inglorious Basterds", "", new LocalDate(), new Byte[ ] { 0 })
-            },
-            { 
-                new Movie("La Princesa Mononoke", "", new LocalDate(1997, 1, 1), new Byte[ ] { 0 }),
-                new Movie("El viaje de Chihiro",  "", new LocalDate(2001, 1, 1), new Byte[ ] { 0 }),
-                new Movie("Mi vecino Totoro",     "", new LocalDate(1988, 1, 1), new Byte[ ] { 0 })
-            }
+    @Parameters(name = "{index}: {0}")
+    public static Collection<Object[ ]> createMovieData( ) {
+        return Arrays.asList(new Object[ ][ ] {
+            { "tarantino", new Movie[ ] {
+                new Movie("Reservoir Dogs",      new LocalDate(1992, 1, 1)),
+                new Movie("Pulp Fiction",        new LocalDate(1994, 1, 1)),
+                new Movie("Jackie Brown",        new LocalDate(1997, 1, 1)),
+                new Movie("Kill Bill Vol. 1",    new LocalDate(2003, 1, 1)),
+                new Movie("Kill Bill Vol. 2",    new LocalDate(2004, 1, 1)),
+                new Movie("Death Proof",         new LocalDate(2007, 1, 1)),
+                new Movie("Inglorious Basterds", new LocalDate(2009, 1, 1)),
+                new Movie("Django Unchained",    new LocalDate(2012, 1, 1))
+            }},
+            { "miyazaki", new Movie[ ] {
+                new Movie("Nausicaä del Valle del Viento", new LocalDate(1984, 1, 1)),
+                new Movie("Mi Vecino Totoro",              new LocalDate(1988, 1, 1)),
+                new Movie("La Princesa Mononoke",          new LocalDate(1997, 1, 1)),
+                new Movie("El viaje de Chihiro",           new LocalDate(2001, 1, 1)),
+                new Movie("El Castillo Ambulante",         new LocalDate(2004, 1, 1)),
+                new Movie("Ponyo en el Acantilado",        new LocalDate(2008, 1, 1))
+            }},
+            { "tarkovsky", new Movie[ ] {
+                new Movie("Ivanovo Detstvo", new LocalDate(1962, 1, 1)),
+                new Movie("Andrei Rublev",   new LocalDate(1966, 1, 1)),
+                new Movie("Solyaris",        new LocalDate(1972, 1, 1)),
+                new Movie("Zerkalo",         new LocalDate(1975, 1, 1)),
+                new Movie("Stalker",         new LocalDate(1979, 1, 1)),
+                new Movie("Nostalghia",      new LocalDate(1983, 1, 1)),
+                new Movie("Offret",          new LocalDate(1986, 1, 1))
+            }},
+            { "anderson", new Movie[ ] {
+                new Movie("Bottle Rocket",            new LocalDate(1996, 1, 1)),
+                new Movie("Rushmore",                 new LocalDate(1998, 1, 1)),
+                new Movie("The Royal Tenenbaums",     new LocalDate(2001, 1, 1)),
+                new Movie("Life Aquatic",             new LocalDate(2004, 1, 1)),
+                new Movie("The Darjeeling Limited",   new LocalDate(2007, 1, 1)),
+                new Movie("Fantastic Mr. Fox",        new LocalDate(2009, 1, 1)),
+                new Movie("Moorise Kingdom",          new LocalDate(2012, 1, 1)),
+                new Movie("The Grand Budapest Hotel", new LocalDate(2014, 1, 1))
+            }}
         });
     }
 
-    private MovieDAO    dao;
+    private MovieDAO dao;
+    private final List<Movie> movieList;
 
-    private final Movie one;
-    private final Movie two;
-    private final Movie three;
-
-    public MovieDAOTest(final Movie one, final Movie two, final Movie three) {
-        this.one   = one;
-        this.two   = two;
-        this.three = three;
-    }
-
-    private void saveMovie(final Movie movie) {
-        if (movie.getId() == null)
-            entityManager.persist(movie);
-        else
-            entityManager.merge(movie);
+    public MovieDAOTest(final String _, final Movie [ ] movieList) {
+        this.movieList = Arrays.asList(movieList);
     }
 
     @Before
@@ -62,66 +77,50 @@ public class MovieDAOTest extends BaseDAOTest {
     @Before
     public void insertMovie( ) {
         entityManager.getTransaction().begin();
-        saveMovie(one);
-        saveMovie(two);
-        saveMovie(three);
+        for (final Movie m : movieList) {
+            if (m.getId() == null) entityManager.persist(m);
+            else                   entityManager.merge(m);
+        }
         entityManager.getTransaction().commit();
     }
 
     @Test
     public void movie_dao_can_find_movies_by_exact_title( ) {
-        final List<Movie> oneFound = dao.findByName(one.getName());
-        assertThat(oneFound).contains(one);
-
-        final List<Movie> twoFound = dao.findByName(two.getName());
-        assertThat(twoFound).contains(two);
-
-        final List<Movie> threeFound = dao.findByName(three.getName());
-        assertThat(threeFound).contains(three);
+        for (final Movie movie : movieList) {
+            final List<Movie> found = dao.findByName(movie.getName());
+            assertThat(found).contains(movie);
+        }
     }
-    
+
     @Test
     public void movie_dao_can_find_movies_by_approximate_title( ) {
-        final String wordOne = one.getName().split("\\s+")[0];
-        final List<Movie> oneFound = dao.findByName(wordOne);
-        assertThat(oneFound).contains(one);
-        
-        final String wordTwo = two.getName().split("\\s+")[0];
-        final List<Movie> twoFound = dao.findByName(wordTwo);
-        assertThat(twoFound).contains(two);
-        
-        final String wortThree = three.getName().split("\\s+")[0];
-        final List<Movie> threeFound = dao.findByName(wortThree);
-        assertThat(threeFound).contains(three);
+        for (final Movie movie : movieList) {
+            final String word = movie.getName().split("\\s+")[0];
+            final List<Movie> found = dao.findByName(word);
+            assertThat(found).contains(movie);
+        }
     }
-    
+
     @Test
     public void movie_dao_finds_movies_ignoring_case( ) {
-        final String word = one.getName().split("\\s+")[0];
-        
-        final List<Movie> upperCasedWord = dao.findByName(word.toUpperCase());
-        assertThat(upperCasedWord).contains(one);
-        
-        final List<Movie> lowerCasedWord = dao.findByName(word.toLowerCase());
-        assertThat(lowerCasedWord).contains(one);
-        
-        final Random random = new Random(); 
-        final StringBuilder builder = new StringBuilder();
-        for (char c : word.toCharArray()) {
-             if (random.nextBoolean())
-                 builder.append(Character.toUpperCase(c));
-             else
-                 builder.append(Character.toLowerCase(c));
+        for (final Movie movie : movieList) {
+            final String word = movie.getName().split("\\s+")[0];
+
+            final List<Movie> upper = dao.findByName(word.toUpperCase());
+            assertThat(upper).contains(movie);
+
+            final List<Movie> lower = dao.findByName(word.toLowerCase());
+            assertThat(lower).contains(movie);
+
+            final List<Movie> rand  = dao.findByName(TestUtils.randomizeCase(word));
+            assertThat(rand).contains(movie);
         }
-        
-        final List<Movie> randomizedCaseWord = dao.findByName(builder.toString());
-        assertThat(randomizedCaseWord).contains(one);
     }
 
     @Test
     public void movie_dao_should_return_all_movies_when_searching_with_empty_title( ) {
         final List<Movie> empty = dao.findByName("");
-        assertThat(empty).containsOnly(one, two, three);
+        assertThat(empty).isEqualTo(movieList);
     }
-    
+
 }

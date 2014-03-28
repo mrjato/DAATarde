@@ -24,6 +24,10 @@ public class MusicStorage extends Article {
         super(name, description, date, picture);
     }
 
+    public MusicStorage(final String name, final LocalDate date) {
+        super(name, date);
+    }
+
     @Override
     public final int hashCode( ) {
         final HashCodeBuilder builder = new HashCodeBuilder();

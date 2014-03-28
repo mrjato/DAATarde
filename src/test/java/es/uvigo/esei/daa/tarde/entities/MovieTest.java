@@ -11,39 +11,39 @@ public class MovieTest {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
-    
+
     @Test
     public void movie_constructor_should_throw_exception_when_initialized_with_null_name( ) {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Article's name cannot be null");
-        
+
         new Movie(null, "description", new LocalDate(), new Byte[ ] { 0 });
     }
-    
+
     @Test
     public void movie_constructor_should_throw_exception_when_initialized_with_null_description( ) {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Article's description cannot be null");
-        
+
         new Movie("name", null, new LocalDate(), new Byte[ ] { 0 });
     }
-    
+
     @Test
     public void movie_constructor_should_throw_exception_when_initialized_with_null_date( ) {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Article's date cannot be null");
-        
+
         new Movie("name", "description", null, new Byte[ ] { 0 });
     }
-    
+
     @Test
     public void movie_constructor_should_throw_exception_when_initialized_with_null_picture( ) {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Article's picture cannot be null");
-        
+
         new Movie("name", "description", new LocalDate(), null);
     }
-    
+
     @Test
     public void movie_equality_contract_is_valid( ) {
         EqualsVerifier.forClass(Movie.class).withPrefabValues(
@@ -52,5 +52,5 @@ public class MovieTest {
             new LocalDate(2014, 3, 25)
         ).verify();
     }
-    
+
 }

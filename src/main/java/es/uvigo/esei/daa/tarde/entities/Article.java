@@ -58,6 +58,10 @@ public abstract class Article {
         this.picture     = picture;
     }
 
+    protected Article(final String name, final LocalDate date) {
+        this(name, "", date, new Byte[ ] { 0 });
+    }
+
     public Long getId( ) {
         return id;
     }

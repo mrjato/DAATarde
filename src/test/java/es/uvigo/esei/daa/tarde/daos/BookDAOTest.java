@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -14,45 +13,46 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import es.uvigo.esei.daa.tarde.TestUtils;
 import es.uvigo.esei.daa.tarde.entities.Book;
 
 @RunWith(Parameterized.class)
 public class BookDAOTest extends BaseDAOTest {
 
-    @Parameters
-    public static Collection<Book[ ]> createBooks( ) {
-        return Arrays.asList(new Book[ ][ ] {
-            {
-                new Book("Don Quijote de la Mancha", "", new LocalDate(), new Byte[ ] { 0 }),
-                new Book("El Código da Vinci",       "", new LocalDate(), new Byte[ ] { 0 }),
-                new Book("1984",                     "", new LocalDate(), new Byte[ ] { 0 })
-            },
-            {
-                new Book("Effective Java: Second Edition",   "", new LocalDate(2008, 5, 8),  new Byte[ ] { 0 }),
-                new Book("Java Concurrency in Practice",     "", new LocalDate(2006, 5, 9),  new Byte[ ] { 0 }),
-                new Book("The Well-Grounded Java Developer", "", new LocalDate(2012, 7, 21), new Byte[ ] { 0 })
-            }
+    @Parameters(name = "{index}: {0}")
+    public static Collection<Object[ ]> createBookData( ) {
+        return Arrays.asList(new Object[ ][ ] {
+            { "asoiaf", new Book[ ] {
+                new Book("A Game of Thrones", new LocalDate(1996,  8,  6)),
+                new Book("A Clash of Kings",  new LocalDate(1998, 11, 16)),
+                new Book("A Storm of Words",  new LocalDate(2000,  8,  8)),
+                new Book("A Fest for Crows",  new LocalDate(2005, 10, 17))
+            }},
+            { "pkdick", new Book[ ] {
+                new Book("The Man in the High Castle",           new LocalDate(1962, 1, 1)),
+                new Book("Do Androids Dream of Electric Sheep?", new LocalDate(1968, 1, 1)),
+                new Book("Ubik",                                 new LocalDate(1969, 1, 1)),
+                new Book("A Scanner Darkly",                     new LocalDate(1977, 1, 1)),
+                new Book("VALIS",                                new LocalDate(1981, 1, 1)),
+                new Book("The Divine Invasion",                  new LocalDate(1981, 1, 1)),
+                new Book("The Owl in Daylight",                  new LocalDate(1982, 1, 1))
+            }},
+            { "odyssey", new Book[ ] {
+                new Book("2001: A Space Odyssey",   new LocalDate(1968, 1, 1)),
+                new Book("2010: Odyssey Two",       new LocalDate(1982, 1, 1)),
+                new Book("2061: Odyssey Three",     new LocalDate(1987, 1, 1)),
+                new Book("3001: The Final Odyssey", new LocalDate(1997, 1, 1))
+            }}
         });
     }
 
     private BookDAO dao;
-    
-    private final Book one;
-    private final Book two;
-    private final Book three;
+    private final List<Book> bookList;
 
-    public BookDAOTest(final Book one, final Book two, final Book three) {
-        this.one   = one;
-        this.two   = two;
-        this.three = three;
+    public BookDAOTest(final String _, final Book [ ] bookList) {
+        this.bookList = Arrays.asList(bookList);
     }
 
-    private void saveBook(final Book book) {
-        if (book.getId() == null)
-            entityManager.persist(book);
-        else
-            entityManager.merge(book);
-    }
 
     @Before
     public void createBookDAO( ) {
@@ -62,66 +62,50 @@ public class BookDAOTest extends BaseDAOTest {
     @Before
     public void insertBooks( ) {
         entityManager.getTransaction().begin();
-        saveBook(one);
-        saveBook(two);
-        saveBook(three);
+        for (final Book b : bookList) {
+            if (b.getId() == null) entityManager.persist(b);
+            else                   entityManager.merge(b);
+        }
         entityManager.getTransaction().commit();
     }
 
     @Test
     public void book_dao_can_find_books_by_exact_title( ) {
-        final List<Book> oneFound = dao.findByName(one.getName());
-        assertThat(oneFound).contains(one);
-
-        final List<Book> twoFound = dao.findByName(two.getName());
-        assertThat(twoFound).contains(two);
-
-        final List<Book> threeFound = dao.findByName(three.getName());
-        assertThat(threeFound).contains(three);
+        for (final Book book : bookList) {
+            final List<Book> found = dao.findByName(book.getName());
+            assertThat(found).contains(book);
+        }
     }
 
     @Test
     public void book_dao_can_find_books_by_approximate_title( ) {
-        final String wordOne = one.getName().split("\\s+")[0];
-        final List<Book> oneFound = dao.findByName(wordOne);
-        assertThat(oneFound).contains(one);
-        
-        final String wordTwo = two.getName().split("\\s+")[0];
-        final List<Book> twoFound = dao.findByName(wordTwo);
-        assertThat(twoFound).contains(two);
-        
-        final String wortThree = three.getName().split("\\s+")[0];
-        final List<Book> threeFound = dao.findByName(wortThree);
-        assertThat(threeFound).contains(three);
+        for (final Book book : bookList) {
+            final String word = book.getName().split("\\s+")[0];
+            final List<Book> found = dao.findByName(word);
+            assertThat(found).contains(book);
+        }
     }
-    
+
     @Test
     public void book_dao_finds_books_ignoring_case( ) {
-        final String word = one.getName().split("\\s+")[0];
-        
-        final List<Book> upperCasedWord = dao.findByName(word.toUpperCase());
-        assertThat(upperCasedWord).contains(one);
-        
-        final List<Book> lowerCasedWord = dao.findByName(word.toLowerCase());
-        assertThat(lowerCasedWord).contains(one);
-        
-        final Random random = new Random(); 
-        final StringBuilder builder = new StringBuilder();
-        for (char c : word.toCharArray()) {
-             if (random.nextBoolean())
-                 builder.append(Character.toUpperCase(c));
-             else
-                 builder.append(Character.toLowerCase(c));
+        for (final Book book : bookList) {
+            final String word = book.getName().split("\\s+")[0];
+
+            final List<Book> upper = dao.findByName(word.toUpperCase());
+            assertThat(upper).contains(book);
+
+            final List<Book> lower = dao.findByName(word.toLowerCase());
+            assertThat(lower).contains(book);
+
+            final List<Book> rand  = dao.findByName(TestUtils.randomizeCase(word));
+            assertThat(rand).contains(book);
         }
-        
-        final List<Book> randomizedCaseWord = dao.findByName(builder.toString());
-        assertThat(randomizedCaseWord).contains(one);
     }
-    
+
     @Test
     public void book_dao_should_return_all_books_when_searching_with_empty_title( ) {
         final List<Book> empty = dao.findByName("");
-        assertThat(empty).containsOnly(one, two, three);
+        assertThat(empty).isEqualTo(bookList);
     }
 
 }
