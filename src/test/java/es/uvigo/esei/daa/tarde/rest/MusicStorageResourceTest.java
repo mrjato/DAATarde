@@ -70,7 +70,7 @@ public class MusicStorageResourceTest extends BaseResourceTest {
     }
     
     private final void populateMockedDAOWithBasicSearches() {
-        when(mockedMusicStorageDAO.findByName("haskell"))
+        when(mockedMusicStorageDAO.findByName("love"))
             .thenReturn(Arrays.asList(
                 new MusicStorage("Loveless",                            "", new LocalDate(1991, 11, 4), new Byte[ ] { 0 }),
                 new MusicStorage("Layla and Other Assorted Love Songs", "", new LocalDate(1970, 11, 1), new Byte[ ] { 0 }),
