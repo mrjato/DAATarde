@@ -1,6 +1,5 @@
 package es.uvigo.esei.daa.tarde.rest;
 
-import static es.uvigo.esei.daa.tarde.rest.JerseyTestBuilder.aJerseyTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -12,7 +11,6 @@ import java.util.List;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.test.JerseyTest;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,16 +46,11 @@ public class MovieResourceTest extends BaseResourceTest {
     private final List<Movie> movieList;
 
     public MovieResourceTest(final String movieListName, final Movie [ ] movieList) {
-        this.mockedDAO     = mock(MovieDAO.class);
         this.movieListName = movieListName;
         this.movieList     = Arrays.asList(movieList);
-    }
 
-    @Override
-    protected JerseyTest createJerseyTest( ) {
-        return aJerseyTest().addResource(
-            new MovieResource(mockedDAO)
-        ).build();
+        this.mockedDAO = mock(MovieDAO.class);
+        registerResourceUnderTest(new MovieResource(mockedDAO));
     }
 
     @Test

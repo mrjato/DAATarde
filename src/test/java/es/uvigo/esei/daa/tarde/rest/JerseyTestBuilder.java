@@ -14,12 +14,8 @@ final class JerseyTestBuilder {
 
     private final Set<Object> resources = new HashSet<>();
 
-    public static JerseyTestBuilder aJerseyTest( ) {
-        return new JerseyTestBuilder();
-    }
-
-    public JerseyTestBuilder addResource(final Object resource) {
-        resources.add(resource);
+    public JerseyTestBuilder addResources(final Set<Object> resources) {
+        this.resources.addAll(resources);
         return this;
     }
 
