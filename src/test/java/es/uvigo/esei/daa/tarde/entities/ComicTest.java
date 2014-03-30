@@ -17,7 +17,7 @@ public class ComicTest {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Article's name cannot be null");
 
-        new Comic(null, "description", new LocalDate(), new Byte[ ] { 0 });
+        new Comic(null, "description", new LocalDate(), new byte[ ] { 0 });
     }
 
     @Test
@@ -25,7 +25,7 @@ public class ComicTest {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Article's description cannot be null");
 
-        new Comic("name", null, new LocalDate(), new Byte[ ] { 0 });
+        new Comic("name", null, new LocalDate(), new byte[ ] { 0 });
     }
 
     @Test
@@ -33,7 +33,7 @@ public class ComicTest {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Article's date cannot be null");
 
-        new Comic("name", "description", null, new Byte[ ] { 0 });
+        new Comic("name", "description", null, new byte[ ] { 0 });
     }
 
     @Test

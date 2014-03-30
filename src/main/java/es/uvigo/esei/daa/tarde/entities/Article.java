@@ -25,10 +25,11 @@ public abstract class Article {
     @GeneratedValue
     private Long id;
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 150, nullable = false)
     protected String name;
 
-    @Column(length = 500, nullable = false)
+    @Lob
+    @Column(length = 2000, nullable = false)
     protected String description;
 
     @Column(nullable = false)
@@ -37,7 +38,7 @@ public abstract class Article {
 
     @Lob
     @Column(nullable = false)
-    protected Byte[ ] picture;
+    protected byte[ ] picture;
 
     protected Article( ) { }
 
@@ -45,8 +46,8 @@ public abstract class Article {
         final String    name,
         final String    description,
         final LocalDate date,
-        final Byte[ ]   picture
-            ) {
+        final byte[ ]   picture
+    ) {
         notNull(name, "Article's name cannot be null");
         notNull(description, "Article's description cannot be null");
         notNull(date, "Article's date cannot be null");
@@ -59,7 +60,7 @@ public abstract class Article {
     }
 
     protected Article(final String name, final LocalDate date) {
-        this(name, "", date, new Byte[ ] { 0 });
+        this(name, "", date, new byte[ ] { 0 });
     }
 
     public Long getId( ) {
@@ -78,7 +79,7 @@ public abstract class Article {
         return date;
     }
 
-    public Byte[ ] getPicture( ) {
+    public byte[ ] getPicture( ) {
         return picture;
     }
 
@@ -87,7 +88,7 @@ public abstract class Article {
         this.description = description;
     }
 
-    public void setPicture(final Byte[ ] picture) {
+    public void setPicture(final byte[ ] picture) {
         notNull(picture, "Article's picture cannot be null");
         this.picture = Arrays.copyOf(picture, picture.length);
     }
