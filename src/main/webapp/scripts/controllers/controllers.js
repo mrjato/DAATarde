@@ -1,4 +1,4 @@
-define(['angular'], function(angular) {
+define(['angular', 'services/services'], function(angular) {
     'use strict';
-    return angular.module('daaTarde.controllers', [ ]);
+    return angular.module('daaTarde.controllers', ['daaTarde.services']);
 });

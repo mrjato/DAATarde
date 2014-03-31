@@ -1,0 +1,27 @@
+<div class="row">
+    <div ng-repeat="book in books" class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><strong>{{ book.name }}</strong> ({{ book.date }})</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-3 col-md-2">
+                    <div class="thumbnail">
+                        <img ng-src="data:image/jpg;base64,{{ book.picture }}" />
+                    </div>
+                </div>
+                <div class="hidden-xs col-sm-9 col-md-10">
+                    <p>{{ book.description }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button type="button" class="btn btn-primary">
+                <i class="fa fa-info-circle"></i> Ver más información
+            </button>
+            <button type="button" class="btn btn-defailt">
+                <i class="fa fa-plus-circle"></i> Añadir a mi colección
+            </button>
+        </div>
+    </div>
+</div>

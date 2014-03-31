@@ -1,5 +1,6 @@
 define([
     'controllers/controllers',
-    'controllers/myController1',
-    'controllers/myController2'
+    'controllers/homeController',
+    'controllers/searchController',
+    'controllers/bookController',
 ], function ( ) { });

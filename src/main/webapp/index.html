@@ -1,19 +1,20 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
-    <title>DAA - Tarde</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DAA - Tarde</title>
 
     <link rel="stylesheet" type="text/css" media="all" href="webjars/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="webjars/font-awesome/4.0.3/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" media="all" href="styles/main.css" />
 </head>
-<body >
-    <h1>DAA Tarde <small>Despliegue básico de AngularJS + RequireJS + Bootstrap</small></h1>
-    <a href="#/view1"><button type="button" class="btn btn-info">Vista 1</button></a>
-    <a href="#/view2"><button type="button" class="btn btn-info">Vista 2</button></a>
-    <div ng-view></div>
-
+<body>
+    <ng-include src='"partials/navigationBar.html"'></ng-include>
+    <div class="container">
+        <ng-view></ng-view>
+    </div>
     <script data-main="scripts/main" src="webjars/requirejs/2.1.11/require.min.js"></script>
 </body>
 </html>

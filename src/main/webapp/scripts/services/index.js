@@ -1,1 +1,4 @@
-define(['services/services'], function( ) { });
+define([
+    'services/services',
+    'services/bookService'
+], function( ) { });
