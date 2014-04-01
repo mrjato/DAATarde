@@ -14,6 +14,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import es.uvigo.esei.daa.tarde.TestUtils;
+import es.uvigo.esei.daa.tarde.entities.Book;
 import es.uvigo.esei.daa.tarde.entities.Movie;
 
 @RunWith(Parameterized.class)
@@ -123,4 +124,10 @@ public class MovieDAOTest extends BaseDAOTest {
         assertThat(empty).isEqualTo(movieList);
     }
 
+    @Test
+    public void movie_dao_can_insert_movies( ) {
+            Movie movie = new Movie("Offret",   new LocalDate(1986, 1, 1));
+            dao.insert(movie);         
+            assertThat(entityManager.find(Movie.class, movie.getId())).isEqualTo(movie);
+    }
 }

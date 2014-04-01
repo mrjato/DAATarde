@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.joda.time.LocalDate;
+
 import es.uvigo.esei.daa.tarde.entities.Article;
 
 public abstract class ArticleDAO<T extends Article> extends GenericDAO<T> {
@@ -11,13 +13,31 @@ public abstract class ArticleDAO<T extends Article> extends GenericDAO<T> {
     public List<T> findByName(final String name) {
         final EntityManager manager = emFactory.createEntityManager();
         try {
-            return manager.createQuery(
-                "SELECT a FROM " + getEntityName() + " a WHERE UPPER(a.name) LIKE :name",
-                getGenericClass()
-            ).setParameter("name", "%" + name.toUpperCase() + "%").getResultList();
+            return manager
+                .createQuery(
+                    "SELECT a FROM " + getEntityName() + " a WHERE UPPER(a.name) LIKE :name",
+                    getGenericClass())
+                .setParameter("name", "%" + name.toUpperCase() + "%")
+                .getResultList();
         } finally {
             manager.close();
         }
+    }
+
+    public void insert(final T article) {
+        final EntityManager manager = emFactory.createEntityManager();
+        
+        try {
+            manager.getTransaction().begin();
+            manager.persist(article);
+            manager.getTransaction().commit();
+        } finally {
+            if (manager.getTransaction().isActive())
+                manager.getTransaction().rollback();
+            
+            manager.close();
+        }
+        
     }
 
 }

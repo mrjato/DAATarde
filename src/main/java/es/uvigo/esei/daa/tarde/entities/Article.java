@@ -39,6 +39,10 @@ public abstract class Article {
     @Lob
     @Column(nullable = false)
     protected byte[ ] picture;
+    
+   
+    @Column(nullable = false )
+    protected boolean verified;
 
     protected Article( ) { }
 
@@ -57,6 +61,7 @@ public abstract class Article {
         this.description = description;
         this.date        = date;
         this.picture     = picture;
+        this.verified    = false;
     }
 
     protected Article(final String name, final LocalDate date) {
@@ -83,7 +88,11 @@ public abstract class Article {
         return picture;
     }
 
-    public void setDescription(final String description) {
+    public boolean isVerified() {
+		return verified;
+	}
+
+	public void setDescription(final String description) {
         notNull(description, "Article's description cannot be null");
         this.description = description;
     }
@@ -93,7 +102,11 @@ public abstract class Article {
         this.picture = Arrays.copyOf(picture, picture.length);
     }
 
-    @Override
+    public void setVerified(boolean verified) {
+		this.verified = verified;
+	}
+
+	@Override
     public abstract int hashCode( );
 
     @Override

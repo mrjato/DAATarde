@@ -107,5 +107,12 @@ public class BookDAOTest extends BaseDAOTest {
         final List<Book> empty = dao.findByName("");
         assertThat(empty).isEqualTo(bookList);
     }
+    
+    @Test
+    public void book_dao_can_insert_books( ) {
+            Book book = new Book("Temerario Vol.1",   new LocalDate(2000, 12, 1));
+            dao.insert(book);         
+            assertThat(entityManager.find(Book.class, book.getId())).isEqualTo(book);
+    }
 
 }

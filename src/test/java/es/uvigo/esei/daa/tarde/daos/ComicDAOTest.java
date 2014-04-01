@@ -14,6 +14,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import es.uvigo.esei.daa.tarde.TestUtils;
+import es.uvigo.esei.daa.tarde.entities.Book;
 import es.uvigo.esei.daa.tarde.entities.Comic;
 
 @RunWith(Parameterized.class)
@@ -94,6 +95,13 @@ public class ComicDAOTest extends BaseDAOTest {
     public void comic_dao_should_return_all_comic_when_searching_with_empty_title( ) {
         final List<Comic> empty = dao.findByName("");
         assertThat(empty).isEqualTo(comicList);
+    }
+    
+    @Test
+    public void comic_dao_can_insert_comics( ) {
+            Comic comic = new Comic("Miracle Man",   new LocalDate(2014, 3, 26));
+            dao.insert(comic);         
+            assertThat(entityManager.find(Comic.class, comic.getId())).isEqualTo(comic);
     }
 
 }

@@ -113,5 +113,13 @@ public class MusicStorageDAOTest extends BaseDAOTest {
         final List<MusicStorage> empty = dao.findByName("");
         assertThat(empty).isEqualTo(musicList);
     }
+    
+    @Test
+    public void musicStorage_dao_can_insert_musicStorages( ) {
+        MusicStorage musicStorage = new MusicStorage("Bergtatt",   new LocalDate(1995, 2, 1));
+            dao.insert(musicStorage);         
+            assertThat(entityManager.find(MusicStorage.class, musicStorage.getId())).isEqualTo(musicStorage);
+    }
+
 
 }
