@@ -23,14 +23,14 @@ public abstract class Article {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Long        id;
 
     @Column(length = 150, nullable = false)
-    protected String name;
+    protected String    name;
 
     @Lob
     @Column(length = 2000, nullable = false)
-    protected String description;
+    protected String    description;
 
     @Column(nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
@@ -38,30 +38,30 @@ public abstract class Article {
 
     @Lob
     @Column(nullable = false)
-    protected byte[ ] picture;
-    
-   
-    @Column(nullable = false )
-    protected boolean verified;
+    protected byte[ ]   picture;
 
-    protected Article( ) { }
+
+    @Column(nullable = false)
+    protected boolean   isVerified;
+
+    protected Article( ) {
+    }
 
     protected Article(
-        final String    name,
-        final String    description,
+        final String name,
+        final String description,
         final LocalDate date,
-        final byte[ ]   picture
-    ) {
+        final byte[ ] picture) {
         notNull(name, "Article's name cannot be null");
         notNull(description, "Article's description cannot be null");
         notNull(date, "Article's date cannot be null");
         notNull(picture, "Article's picture cannot be null");
 
-        this.name        = name;
+        this.name = name;
         this.description = description;
-        this.date        = date;
-        this.picture     = picture;
-        this.verified    = false;
+        this.date = date;
+        this.picture = picture;
+        this.isVerified = false;
     }
 
     protected Article(final String name, final LocalDate date) {
@@ -88,11 +88,11 @@ public abstract class Article {
         return picture;
     }
 
-    public boolean isVerified() {
-		return verified;
-	}
+    public boolean isVerified( ) {
+        return isVerified;
+    }
 
-	public void setDescription(final String description) {
+    public void setDescription(final String description) {
         notNull(description, "Article's description cannot be null");
         this.description = description;
     }
@@ -103,10 +103,10 @@ public abstract class Article {
     }
 
     public void setVerified(boolean verified) {
-		this.verified = verified;
-	}
+        this.isVerified = verified;
+    }
 
-	@Override
+    @Override
     public abstract int hashCode( );
 
     @Override
