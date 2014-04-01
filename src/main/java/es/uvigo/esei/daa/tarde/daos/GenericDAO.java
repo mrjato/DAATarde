@@ -5,14 +5,12 @@ import java.lang.reflect.ParameterizedType;
 import javax.persistence.Entity;
 import javax.persistence.EntityManagerFactory;
 
-import es.uvigo.esei.daa.tarde.PersistenceListener;
-
 public abstract class GenericDAO<T> {
 
     protected final EntityManagerFactory emFactory;
 
     protected GenericDAO( ) {
-        emFactory = PersistenceListener.getEntityManagerFactory();
+        emFactory = PersistenceFactory.getEntityManagerFactory();
     }
 
     protected String getEntityName( ) {

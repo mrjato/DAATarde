@@ -6,8 +6,6 @@ import javax.persistence.EntityManagerFactory;
 import org.junit.After;
 import org.junit.Before;
 
-import es.uvigo.esei.daa.tarde.PersistenceListener;
-
 public abstract class BaseDAOTest {
 
     protected static EntityManagerFactory emFactory;
@@ -15,9 +13,9 @@ public abstract class BaseDAOTest {
 
     @Before
     public void createEntityManager( ) {
-        PersistenceListener.createEntityManagerFactory("testing");
+        PersistenceFactory.createEntityManagerFactory("testing");
 
-        emFactory = PersistenceListener.getEntityManagerFactory();
+        emFactory = PersistenceFactory.getEntityManagerFactory();
         entityManager = emFactory.createEntityManager();
     }
 

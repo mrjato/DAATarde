@@ -5,10 +5,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
+
+import javax.persistence.PersistenceException;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -46,6 +51,9 @@ public class BookDAOTest extends BaseDAOTest {
         });
     }
 
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
+
     private BookDAO dao;
     private final List<Book> bookList;
 
@@ -53,6 +61,14 @@ public class BookDAOTest extends BaseDAOTest {
         this.bookList = Arrays.asList(bookList);
     }
 
+    private void unverifyBook(final Book b) {
+        entityManager.getTransaction().begin();
+
+        b.setVerified(false);
+        entityManager.merge(b);
+
+        entityManager.getTransaction().commit();
+    }
 
     @Before
     public void createBookDAO( ) {
@@ -63,11 +79,13 @@ public class BookDAOTest extends BaseDAOTest {
     public void insertBooks( ) {
         entityManager.getTransaction().begin();
         for (final Book b : bookList) {
+            b.setVerified(true);
             if (b.getId() == null) entityManager.persist(b);
             else                   entityManager.merge(b);
         }
         entityManager.getTransaction().commit();
     }
+
 
     @Test
     public void book_dao_can_find_books_by_exact_title( ) {
@@ -107,12 +125,39 @@ public class BookDAOTest extends BaseDAOTest {
         final List<Book> empty = dao.findByName("");
         assertThat(empty).isEqualTo(bookList);
     }
-    
+
+    @Test
+    public void book_dao_should_ignore_non_verified_books_when_searching_by_name( ) {
+        for (final Book book : bookList) {
+            unverifyBook(book);
+
+            final List<Book> found = dao.findByName(book.getName());
+            assertThat(found).doesNotContain(book);
+        }
+    }
+
     @Test
     public void book_dao_can_insert_books( ) {
-            Book book = new Book("Temerario Vol.1",   new LocalDate(2000, 12, 1));
-            dao.insert(book);         
-            assertThat(entityManager.find(Book.class, book.getId())).isEqualTo(book);
+        for (final Book book : bookList) {
+            final Book inserted = new Book(book.getName(), book.getDate());
+            dao.insert(inserted);
+
+            final Long id = inserted.getId();
+            assertThat(id).isNotNull();
+
+            final Book found = entityManager.find(Book.class, id);
+            assertThat(found).isEqualTo(inserted);
+        }
+    }
+
+    @Test
+    public void book_dao_should_throw_an_exception_when_inserting_an_already_inserted_book( ) {
+        thrown.expect(PersistenceException.class);
+
+        final Random random = new Random();
+        final Book book = bookList.get(random.nextInt(bookList.size()));
+
+        dao.insert(book);
     }
 
 }

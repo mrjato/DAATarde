@@ -14,7 +14,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import es.uvigo.esei.daa.tarde.TestUtils;
-import es.uvigo.esei.daa.tarde.entities.Book;
 import es.uvigo.esei.daa.tarde.entities.Comic;
 
 @RunWith(Parameterized.class)
@@ -43,6 +42,15 @@ public class ComicDAOTest extends BaseDAOTest {
         this.comicList = Arrays.asList(comicList);
     }
 
+    private void unverifyComic(final Comic c) {
+        entityManager.getTransaction().begin();
+
+        c.setVerified(false);
+        entityManager.merge(c);
+
+        entityManager.getTransaction().commit();
+    }
+
     @Before
     public void createComicDAO( ) {
         dao = new ComicDAO();
@@ -52,6 +60,7 @@ public class ComicDAOTest extends BaseDAOTest {
     public void insertComics( ) {
         entityManager.getTransaction().begin();
         for (final Comic c : comicList) {
+            c.setVerified(true);
             if (c.getId() == null) entityManager.persist(c);
             else                   entityManager.merge(c);
         }
@@ -96,12 +105,29 @@ public class ComicDAOTest extends BaseDAOTest {
         final List<Comic> empty = dao.findByName("");
         assertThat(empty).isEqualTo(comicList);
     }
-    
+
+    @Test
+    public void comic_dao_should_ignore_non_verified_comics_when_searching_by_name( ) {
+        for (final Comic comic : comicList) {
+            unverifyComic(comic);
+
+            final List<Comic> found = dao.findByName(comic.getName());
+            assertThat(found).doesNotContain(comic);
+        }
+    }
+
     @Test
     public void comic_dao_can_insert_comics( ) {
-            Comic comic = new Comic("Miracle Man",   new LocalDate(2014, 3, 26));
-            dao.insert(comic);         
-            assertThat(entityManager.find(Comic.class, comic.getId())).isEqualTo(comic);
+        for (final Comic comic : comicList) {
+            final Comic inserted = new Comic(comic.getName(), comic.getDate());
+            dao.insert(inserted);
+
+            final Long id = inserted.getId();
+            assertThat(id).isNotNull();
+
+            final Comic found = entityManager.find(Comic.class, id);
+            assertThat(found).isEqualTo(inserted);
+        }
     }
 
 }

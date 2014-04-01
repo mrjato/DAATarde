@@ -1,44 +1,24 @@
 package es.uvigo.esei.daa.tarde;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import es.uvigo.esei.daa.tarde.daos.PersistenceFactory;
+
 @WebListener
-public class PersistenceListener implements ServletContextListener {
+public final class PersistenceListener implements ServletContextListener {
 
-    private static EntityManagerFactory entityManagerFactory;
-
-    public static EntityManagerFactory createEntityManagerFactory(
-        final String persistenceUnitName
-    ) {
-        entityManagerFactory = Persistence.createEntityManagerFactory(
-            persistenceUnitName
-        );
-
-        return entityManagerFactory;
-    }
-
-    public static EntityManagerFactory getEntityManagerFactory( ) {
-        if (entityManagerFactory == null) {
-            throw new IllegalStateException(
-                "Context has not yet been initialized."
-            );
-        }
-
-        return entityManagerFactory;
-    }
+    private static final String PERSISTENCE_UNIT = "default";
 
     @Override
     public void contextInitialized(final ServletContextEvent _) {
-        createEntityManagerFactory("default");
+        PersistenceFactory.createEntityManagerFactory(PERSISTENCE_UNIT);
     }
 
     @Override
     public void contextDestroyed(final ServletContextEvent _) {
-        entityManagerFactory.close();
+        PersistenceFactory.getEntityManagerFactory().close();
     }
 
 }

@@ -14,7 +14,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import es.uvigo.esei.daa.tarde.TestUtils;
-import es.uvigo.esei.daa.tarde.entities.Book;
 import es.uvigo.esei.daa.tarde.entities.Movie;
 
 @RunWith(Parameterized.class)
@@ -70,6 +69,15 @@ public class MovieDAOTest extends BaseDAOTest {
         this.movieList = Arrays.asList(movieList);
     }
 
+    private void unverifyMovie(final Movie m) {
+        entityManager.getTransaction().begin();
+
+        m.setVerified(false);
+        entityManager.merge(m);
+
+        entityManager.getTransaction().commit();
+    }
+
     @Before
     public void createMovieDAO( ) {
         dao = new MovieDAO();
@@ -79,6 +87,7 @@ public class MovieDAOTest extends BaseDAOTest {
     public void insertMovie( ) {
         entityManager.getTransaction().begin();
         for (final Movie m : movieList) {
+            m.setVerified(true);
             if (m.getId() == null) entityManager.persist(m);
             else                   entityManager.merge(m);
         }
@@ -125,9 +134,26 @@ public class MovieDAOTest extends BaseDAOTest {
     }
 
     @Test
+    public void movie_dao_should_ignore_non_verified_movies_when_searching_by_name( ) {
+        for (final Movie movie : movieList) {
+            unverifyMovie(movie);
+
+            final List<Movie> found = dao.findByName(movie.getName());
+            assertThat(found).doesNotContain(movie);
+        }
+    }
+
+    @Test
     public void movie_dao_can_insert_movies( ) {
-            Movie movie = new Movie("Offret",   new LocalDate(1986, 1, 1));
-            dao.insert(movie);         
-            assertThat(entityManager.find(Movie.class, movie.getId())).isEqualTo(movie);
+        for (final Movie movie : movieList) {
+            final Movie inserted = new Movie(movie.getName(), movie.getDate());
+            dao.insert(inserted);
+
+            final Long id = inserted.getId();
+            assertThat(id).isNotNull();
+
+            final Movie found = entityManager.find(Movie.class, id);
+            assertThat(found).isEqualTo(inserted);
+        }
     }
 }

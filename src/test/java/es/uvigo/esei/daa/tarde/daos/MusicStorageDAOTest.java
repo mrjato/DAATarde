@@ -60,6 +60,15 @@ public class MusicStorageDAOTest extends BaseDAOTest {
         this.musicList = Arrays.asList(musicList);
     }
 
+    private void unverifyMusic(final MusicStorage m) {
+        entityManager.getTransaction().begin();
+
+        m.setVerified(false);
+        entityManager.merge(m);
+
+        entityManager.getTransaction().commit();
+    }
+
     @Before
     public void createMusicStorageDAO( ) {
         dao = new MusicStorageDAO();
@@ -69,6 +78,7 @@ public class MusicStorageDAOTest extends BaseDAOTest {
     public void insertMusicStorage( ) {
         entityManager.getTransaction().begin();
         for (final MusicStorage m : musicList) {
+            m.setVerified(true);
             if (m.getId() == null) entityManager.persist(m);
             else                   entityManager.merge(m);
         }
@@ -113,13 +123,33 @@ public class MusicStorageDAOTest extends BaseDAOTest {
         final List<MusicStorage> empty = dao.findByName("");
         assertThat(empty).isEqualTo(musicList);
     }
-    
+
     @Test
-    public void musicStorage_dao_can_insert_musicStorages( ) {
-        MusicStorage musicStorage = new MusicStorage("Bergtatt",   new LocalDate(1995, 2, 1));
-            dao.insert(musicStorage);         
-            assertThat(entityManager.find(MusicStorage.class, musicStorage.getId())).isEqualTo(musicStorage);
+    public void music_storage_dao_should_ignore_non_verified_music_storages_when_searching_by_name( ) {
+        for (final MusicStorage music : musicList) {
+            unverifyMusic(music);
+
+            final List<MusicStorage> found = dao.findByName(music.getName());
+            assertThat(found).doesNotContain(music);
+        }
     }
 
+    @Test
+    public void music_storage_dao_can_insert_music_storages( ) {
+        for (final MusicStorage music : musicList) {
+            final MusicStorage inserted = new MusicStorage(
+                music.getName(), music.getDate()
+            );
+            dao.insert(inserted);
+
+            final Long id = inserted.getId();
+            assertThat(id).isNotNull();
+
+            final MusicStorage found = entityManager.find(
+                MusicStorage.class, id
+            );
+            assertThat(found).isEqualTo(inserted);
+        }
+    }
 
 }
