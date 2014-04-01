@@ -23,49 +23,51 @@ public abstract class Article {
 
     @Id
     @GeneratedValue
-    private Long        id;
+    private Long id;
 
     @Column(length = 150, nullable = false)
-    protected String    name;
-
-    @Lob
-    @Column(length = 2000, nullable = false)
-    protected String    description;
+    protected String name;
 
     @Column(nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     protected LocalDate date;
 
     @Lob
+    @Column(length = 2000, nullable = false)
+    protected String description = "";
+
+    @Lob
     @Column(nullable = false)
-    protected byte[ ]   picture;
+    protected byte[ ] picture = new byte[ ] { 0 };
 
+    @Column(nullable = false, name = "verified")
+    protected boolean isVerified = false;
 
-    @Column(nullable = false)
-    protected boolean   isVerified;
-
-    protected Article( ) {
-    }
+    protected Article( ) { }
 
     protected Article(
         final String name,
         final String description,
         final LocalDate date,
-        final byte[ ] picture) {
+        final byte[ ] picture
+    ) {
         notNull(name, "Article's name cannot be null");
         notNull(description, "Article's description cannot be null");
         notNull(date, "Article's date cannot be null");
         notNull(picture, "Article's picture cannot be null");
 
-        this.name = name;
+        this.name        = name;
         this.description = description;
-        this.date = date;
-        this.picture = picture;
-        this.isVerified = false;
+        this.date        = date;
+        this.picture     = picture;
     }
 
     protected Article(final String name, final LocalDate date) {
-        this(name, "", date, new byte[ ] { 0 });
+        notNull(name, "Article's name cannot be null");
+        notNull(date, "Article's date cannot be null");
+
+        this.name = name;
+        this.date = date;
     }
 
     public Long getId( ) {
@@ -102,8 +104,8 @@ public abstract class Article {
         this.picture = Arrays.copyOf(picture, picture.length);
     }
 
-    public void setVerified(boolean verified) {
-        this.isVerified = verified;
+    public void setVerified(final boolean isVerified) {
+        this.isVerified = isVerified;
     }
 
     @Override
@@ -113,3 +115,4 @@ public abstract class Article {
     public abstract boolean equals(final Object obj);
 
 }
+

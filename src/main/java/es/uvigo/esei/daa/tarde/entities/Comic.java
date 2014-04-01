@@ -19,7 +19,8 @@ public class Comic extends Article {
         final String    name,
         final String    description,
         final LocalDate date,
-        final byte[ ]   picture) {
+        final byte[ ]   picture
+    ) {
         super(name, description, date, picture);
     }
 

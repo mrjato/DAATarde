@@ -20,7 +20,7 @@ public class Book extends Article {
         final String    description,
         final LocalDate date,
         final byte[ ]   picture
-            ) {
+    ) {
         super(name, description, date, picture);
     }
 
