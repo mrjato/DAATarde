@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html ng-app>
+	<head>
+		<meta charset="utf-8">
+		<title>Alta Art&iacute;culo</title>
+	</head>
+	<body>
+		<div id="globalAddArticles" ng-controller="Controller">
+		  <form novalidate method="post" name="form" class="form">
+			<label for="user">Nombre: <span ng-show="form.aName.$error.required">*</span><br/></label>
+			
+			<input class="form-control" type="text" ng-model="article.name" name="aName" placeholder=" Nombre del art&iacute;culo" required /><br/>
+			
+
+			<label for="emailaddress">Fecha: <span ng-show="form.aDate.$error.required">*</span><br/></label>
+			<input class="form-control" type="date" min="1" max="10" ng-model="article.date" name="aDate" required /><br/>
+			
+			<label for="terms">Descripción: <span ng-show="form.aDescription.$error.required">*</span><br/></label>
+			<textarea class="form-control" rows="6" cols="30" placeholder=" A&ntilde;ade una descripci&oacute;n..." ng-model="article.description" name="aDescription" required ></textarea><br/>
+			
+			
+			<label for="comments">Imagen: <span ng-show="form.aPicture.$error.required">*</span><br/></label><br/>
+			<input  class="btn btn-default" type="file" ng-model="article.picture" name="aPicture"/><br/><br/>
+			
+
+			
+		  
+			<label for="user">Tipo de Art&iacute;culo:</label><br/>
+			<div id="radioButtons">
+				<input type="radio" name="tipoArt" value="book" checked >Libro</br>
+				<input type="radio" name="tipoArt" value="comic">Cómic</br>
+				<input type="radio" name="tipoArt" value="movie">Película</br>
+				<input type="radio" name="tipoArt" value="musicStorage">Álbum de Música</br>
+			</div>
+			<div id="botonsSubmitCancelar">
+				<button class="btn btn-default" name="botonSubmitAlta" type="submit" title=" Pulsa para dar de alta el art&iacute;culo" ng-click="update(article)" ng-disabled="form.$error.required" >Guardar</button>
+				<button class="btn btn-default" name="Cancelar" type="submit" ng-click="reset()" >Cancelar</button>
+			</div>
+		  </form>
+		
+		<script>
+		  function Controller($scope) {
+			$scope.master = {};
+		 
+			$scope.update = function(user) {
+			  $scope.master = angular.copy(user);
+			};
+		 
+			$scope.reset = function() {
+			  $scope.user = angular.copy($scope.master);
+			};
+		 
+			$scope.reset();
+		  }
+		</script>
+	</body>
+</html>

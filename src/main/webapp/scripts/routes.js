@@ -10,6 +10,14 @@ define(['app'], function(app) {
 
         // temporal while listing not implemented in REST API: listing redirects
         // to an empty search
+        
+        $routeProvider.when('/addArticle', {
+            templateUrl: 'partials/addArticle.html',
+            controller: 'articleController'
+        });
+        
+        
+        
         $routeProvider.when('/books', {
             templateUrl: 'partials/articleList.html',
             controller: 'ArticleListController',

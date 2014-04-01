@@ -32,3 +32,75 @@ body {
         padding-bottom: 10px;
     }
 }
+
+
+/* Para addArticles */
+input[type=date] 
+{
+line-height: 20px;
+}
+
+/* Para addArticles */
+.btn-group
+{
+	margin-top: 7%;
+}
+
+.btn-default
+{
+	margin-right:1%;
+	margin-left:1%;
+}
+
+/* Para addArticles */
+label{
+float: left;
+width: 120px;
+font-weight: bold;
+color: #777;
+}
+
+/* Para addArticles */
+input[type=file] {
+ display: initial; 
+}
+
+/* Para addArticles */
+input,textarea{
+margin-bottom: 5px;
+}
+
+/* En addArticles, para que los botones de Submit y Cancelar estean centrados */
+#botonsSubmitCancelar
+{
+	margin-top:4%;
+	margin-left: 6%;
+	text-align: center;
+}
+
+/* Radio buttons de addArticles */
+#radioButtons 
+{
+	margin-left: 2%;
+}
+
+
+
+input[type=radio], input[type=checkbox] {
+	margin: 0px 0 0;
+	margin-top: 1px \9;
+}
+
+#globalAddArticles
+{
+	margin-left: 20%;
+	margin-top: 5%;
+	margin-right: 20%;
+}
+
+br{
+clear: left;
+}
+
+
+
