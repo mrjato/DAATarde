@@ -1,16 +1,24 @@
 package es.uvigo.esei.daa.tarde.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.codec.binary.Base64;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +66,17 @@ public class BookResourceTest extends BaseResourceTest {
         registerResourceUnderTest(new BookResource(mockedDAO));
     }
 
+    private final Form createBookForm(final Book book) {
+        final Form bookForm = new Form();
+
+        bookForm.param("name", book.getName());
+        bookForm.param("date", book.getDate().toString());
+        bookForm.param("description", book.getDescription());
+        bookForm.param("picture", Base64.encodeBase64URLSafeString(book.getPicture()));
+
+        return bookForm;
+    }
+
     @Test
     public void book_resource_is_able_to_search_by_name( ) {
         when(mockedDAO.findByName(bookListName)).thenReturn(bookList);
@@ -69,6 +88,65 @@ public class BookResourceTest extends BaseResourceTest {
         assertThat(response.getStatus()).isEqualTo(OK_CODE);
         assertThat(response.readEntity(new GenericType<List<Book>>() { }))
             .containsExactlyElementsOf(bookList);
+    }
+
+    @Test
+    public void book_resource_returns_all_books_when_searching_with_empty_name( ) {
+        when(mockedDAO.findByName("")).thenReturn(bookList);
+
+        final Response response = jerseyTest.target("books").queryParam(
+            "search", ""
+        ).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(OK_CODE);
+        assertThat(response.readEntity(new GenericType<List<Book>>() { }))
+            .containsExactlyElementsOf(bookList);
+    }
+
+    @Test
+    public void book_resource_returns_a_server_error_code_when_dao_throws_exception_while_searching_by_name( ) {
+        when(mockedDAO.findByName(bookListName)).thenThrow(new PersistenceException());
+
+        final Response response = jerseyTest.target("books").queryParam(
+            "search", bookListName
+        ).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
+    }
+
+    @Test
+    public void book_resource_is_able_to_insert_books( ) {
+        final Builder request = jerseyTest.target("books").request(
+            MediaType.APPLICATION_JSON
+        );
+
+        for (final Book book : bookList) {
+            final Response response = request.post(Entity.entity(
+                createBookForm(book),
+                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+            ));
+
+            assertThat(response.getStatus()).isEqualTo(OK_CODE);
+            verify(mockedDAO).insert(book);
+        }
+    }
+
+    @Test
+    public void book_resource_returns_a_server_error_code_when_dao_throws_exception_while_inserting_a_book( ) {
+        final Builder request = jerseyTest.target("books").request(
+            MediaType.APPLICATION_JSON
+        );
+
+        for (final Book book : bookList) {
+            doThrow(new PersistenceException()).when(mockedDAO).insert(book);
+
+            final Response response = request.post(Entity.entity(
+                createBookForm(book),
+                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+            ));
+
+            assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
+        }
     }
 
 }
