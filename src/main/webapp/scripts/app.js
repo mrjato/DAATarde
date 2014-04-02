@@ -2,6 +2,7 @@ define([
     'angular',
     'angularRoute',
     'angularResource',
+    'angularUpload',
     'controllers/index',
     'directives/index',
     'filters/index',
@@ -16,6 +17,7 @@ define([
         'daaTarde.services',
         'ngRoute',
         'ngResource',
+        'angularFileUpload'
     ]);
 
 });

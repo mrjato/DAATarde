@@ -8,19 +8,13 @@ define(['app'], function(app) {
             controller: 'HomeController'
         });
 
+        $routeProvider.when('/addArticle', {
+            templateUrl: 'partials/addArticle.html',
+            controller: 'ArticleAddController'
+        });
+
         // temporal while listing not implemented in REST API: listing redirects
         // to an empty search
-        
-        $routeProvider.when('/articleAdd', {
-            templateUrl: 'partials/articleAdd.html',
-            controller: 'articleController'
-        });
-        
-        $routeProvider.when('/articleVerify', {
-            templateUrl: 'partials/articleVerify.html',
-            controller: 'articleController'
-        });
-        
         $routeProvider.when('/books', {
             templateUrl: 'partials/articleList.html',
             controller: 'ArticleListController',

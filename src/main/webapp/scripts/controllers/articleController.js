@@ -9,6 +9,25 @@ define(['controllers/controllers'], function(controllers) {
         });
     }];
 
-    controllers.controller('ArticleListController', articleList);
+    var articleAdd = ['$scope', '$resource', '$location',
+        function($scope, $resource, $location) {
+            $scope.categories = [
+                { name: 'Libros',    path: 'books'         },
+                { name: 'Cómics',    path: 'comics'        },
+                { name: 'Películas', path: 'movies'        },
+                { name: 'Música',    path: 'musicstorages' },
+            ];
+
+            $scope.add = function( ) {
+                $resource('rest/' + $scope.category.path).save(
+                    $scope.article
+                );
+                $location.path("/" + $scope.category.path);
+            };
+        }
+    ];
+
+    controllers.controller('ArticleListController', articleList)
+               .controller('ArticleAddController',  articleAdd);
 
 });
