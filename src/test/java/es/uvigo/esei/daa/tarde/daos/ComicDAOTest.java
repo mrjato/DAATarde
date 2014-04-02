@@ -39,7 +39,7 @@ public class ComicDAOTest extends BaseDAOTest {
             }}
         });
     }
-    
+
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
@@ -53,8 +53,9 @@ public class ComicDAOTest extends BaseDAOTest {
     private void unverifyComic(final Comic c) {
         entityManager.getTransaction().begin();
 
-        c.setVerified(false);
-        entityManager.merge(c);
+        final Comic comic = entityManager.find(Comic.class, c.getId());
+        comic.setVerified(false);
+        entityManager.merge(comic);
 
         entityManager.getTransaction().commit();
     }
@@ -128,7 +129,7 @@ public class ComicDAOTest extends BaseDAOTest {
     public void comic_dao_can_insert_comics( ) {
         for (final Comic comic : comicList) {
             final Comic inserted = new Comic(comic.getName(), comic.getDate());
-            dao.insert(inserted);
+            dao.save(inserted);
 
             final Long id = inserted.getId();
             assertThat(id).isNotNull();
@@ -140,10 +141,11 @@ public class ComicDAOTest extends BaseDAOTest {
 
     @Test
     public void comic_dao_can_update_comics( ) {
-        for (final Comic comic : comicList) {
+        for (final Comic c : comicList) {
+            final Comic comic = entityManager.find(Comic.class, c.getId());
             comic.setVerified(!comic.isVerified());
 
-            dao.update(comic);
+            dao.save(comic);
 
             final Comic found = entityManager.find(Comic.class, comic.getId());
             assertThat(found.isVerified()).isEqualTo(comic.isVerified());

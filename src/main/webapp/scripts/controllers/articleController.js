@@ -26,7 +26,7 @@ define(['controllers/controllers'], function(controllers) {
             };
         }
     ];
-    
+
     var articleVerify = ['$scope', 'articles', function($scope, articles) {
         articles.$promise.then(function(articles) {
             articles.forEach(function(article) {
@@ -36,8 +36,9 @@ define(['controllers/controllers'], function(controllers) {
         });
     }];
 
-    controllers.controller('ArticleListController', articleList)
-               .controller('ArticleAddController',  articleAdd)
-               .controller('ArticleVerifyController', articleVerify);
+    controllers
+        .controller('ArticleListController',   articleList)
+        .controller('ArticleAddController',    articleAdd)
+        .controller('ArticleVerifyController', articleVerify);
 
 });

@@ -71,8 +71,11 @@ public class MusicStorageDAOTest extends BaseDAOTest {
     private void unverifyMusic(final MusicStorage m) {
         entityManager.getTransaction().begin();
 
-        m.setVerified(false);
-        entityManager.merge(m);
+        final MusicStorage music = entityManager.find(
+            MusicStorage.class, m.getId()
+        );
+        music.setVerified(false);
+        entityManager.merge(music);
 
         entityManager.getTransaction().commit();
     }
@@ -148,7 +151,7 @@ public class MusicStorageDAOTest extends BaseDAOTest {
             final MusicStorage inserted = new MusicStorage(
                 music.getName(), music.getDate()
                     );
-            dao.insert(inserted);
+            dao.save(inserted);
 
             final Long id = inserted.getId();
             assertThat(id).isNotNull();
@@ -162,13 +165,18 @@ public class MusicStorageDAOTest extends BaseDAOTest {
 
     @Test
     public void music_storage_dao_can_update_music_storages( ) {
-        for (final MusicStorage musicStorage : musicList) {
-            musicStorage.setVerified(!musicStorage.isVerified());
+        for (final MusicStorage m : musicList) {
+            final MusicStorage music = entityManager.find(
+                MusicStorage.class, m.getId()
+            );
+            music.setVerified(!music.isVerified());
 
-            dao.update(musicStorage);
+            dao.save(music);
 
-            final MusicStorage found = entityManager.find(MusicStorage.class, musicStorage.getId());
-            assertThat(found.isVerified()).isEqualTo(musicStorage.isVerified());
+            final MusicStorage found = entityManager.find(
+                MusicStorage.class, music.getId()
+            );
+            assertThat(found.isVerified()).isEqualTo(music.isVerified());
         }
     }
 

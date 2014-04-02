@@ -5,7 +5,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +23,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import es.uvigo.esei.daa.tarde.daos.MusicStorageDAO;
-import es.uvigo.esei.daa.tarde.entities.Movie;
 import es.uvigo.esei.daa.tarde.entities.MusicStorage;
 
 @RunWith(Parameterized.class)
@@ -86,25 +84,6 @@ public class MusicStorageResourceTest extends ArticleResourceTest<MusicStorage, 
             new GenericType<List<MusicStorage>>() { }
         )).containsExactlyElementsOf(musicList);
     }
-    
-    @Test
-    public void music_storage_resource_returns_not_verified_music_storages( ) {
-        musicList.get(0).setVerified(false);
-        musicList.get(1).setVerified(false);
-
-        List<MusicStorage> notVerifiedList = new ArrayList<MusicStorage>();
-        notVerifiedList.add(musicList.get(0));
-        notVerifiedList.add(musicList.get(1));
-
-        when(mockedDAO.getNotVerified()).thenReturn(notVerifiedList);
-
-        final Response response = jerseyTest.target("books").path("/notVerified").request().get();
-
-        assertThat(response.getStatus()).isEqualTo(OK_CODE);
-        assertThat(response.readEntity(
-            new GenericType<List<MusicStorage>>() { }
-                )).containsExactlyElementsOf(notVerifiedList);
-    }
 
     @Test
     public void music_storage_resource_returns_a_server_error_code_when_dao_throws_exception_while_searching_by_name( ) {
@@ -129,7 +108,7 @@ public class MusicStorageResourceTest extends ArticleResourceTest<MusicStorage, 
             ));
 
             assertThat(response.getStatus()).isEqualTo(OK_CODE);
-            verify(mockedDAO).insert(music);
+            verify(mockedDAO).save(music);
         }
     }
 
@@ -140,7 +119,7 @@ public class MusicStorageResourceTest extends ArticleResourceTest<MusicStorage, 
         );
 
         for (final MusicStorage music : musicList) {
-            doThrow(new PersistenceException()).when(mockedDAO).insert(music);
+            doThrow(new PersistenceException()).when(mockedDAO).save(music);
 
             final Response response = request.post(Entity.entity(
                 music, MediaType.APPLICATION_JSON_TYPE
@@ -148,6 +127,20 @@ public class MusicStorageResourceTest extends ArticleResourceTest<MusicStorage, 
 
             assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
         }
+    }
+
+    @Test
+    public void music_storage_resource_returns_not_verified_music_storages( ) {
+        when(mockedDAO.findNotVerified()).thenReturn(musicList);
+
+        final Response response = jerseyTest.target("musicstorages").path(
+            "/notVerified"
+        ).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(OK_CODE);
+        assertThat(response.readEntity(
+            new GenericType<List<MusicStorage>>() { }
+        )).containsExactlyElementsOf(musicList);
     }
 
 }

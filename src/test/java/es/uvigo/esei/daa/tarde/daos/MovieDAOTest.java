@@ -19,7 +19,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import es.uvigo.esei.daa.tarde.TestUtils;
-import es.uvigo.esei.daa.tarde.entities.Comic;
 import es.uvigo.esei.daa.tarde.entities.Movie;
 
 @RunWith(Parameterized.class)
@@ -67,7 +66,7 @@ public class MovieDAOTest extends BaseDAOTest {
             }}
         });
     }
-    
+
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
@@ -81,8 +80,9 @@ public class MovieDAOTest extends BaseDAOTest {
     private void unverifyMovie(final Movie m) {
         entityManager.getTransaction().begin();
 
-        m.setVerified(false);
-        entityManager.merge(m);
+        final Movie movie = entityManager.find(Movie.class, m.getId());
+        movie.setVerified(false);
+        entityManager.merge(movie);
 
         entityManager.getTransaction().commit();
     }
@@ -156,7 +156,7 @@ public class MovieDAOTest extends BaseDAOTest {
     public void movie_dao_can_insert_movies( ) {
         for (final Movie movie : movieList) {
             final Movie inserted = new Movie(movie.getName(), movie.getDate());
-            dao.insert(inserted);
+            dao.save(inserted);
 
             final Long id = inserted.getId();
             assertThat(id).isNotNull();
@@ -165,13 +165,14 @@ public class MovieDAOTest extends BaseDAOTest {
             assertThat(found).isEqualTo(inserted);
         }
     }
-    
+
     @Test
     public void movie_dao_can_update_movies( ) {
-        for (final Movie movie : movieList) {
+        for (final Movie m : movieList) {
+            final Movie movie = entityManager.find(Movie.class, m.getId());
             movie.setVerified(!movie.isVerified());
 
-            dao.update(movie);
+            dao.save(movie);
 
             final Movie found = entityManager.find(Movie.class, movie.getId());
             assertThat(found.isVerified()).isEqualTo(movie.isVerified());

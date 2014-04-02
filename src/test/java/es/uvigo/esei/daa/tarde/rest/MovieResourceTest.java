@@ -5,7 +5,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +23,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import es.uvigo.esei.daa.tarde.daos.MovieDAO;
-import es.uvigo.esei.daa.tarde.entities.Comic;
 import es.uvigo.esei.daa.tarde.entities.Movie;
 
 @RunWith(Parameterized.class)
@@ -84,25 +82,6 @@ public class MovieResourceTest extends ArticleResourceTest<Movie, MovieDAO> {
             new GenericType<List<Movie>>() { }
         )).containsExactlyElementsOf(movieList);
     }
-    
-    @Test
-    public void movie_resource_returns_not_verified_movies( ) {
-        movieList.get(0).setVerified(false);
-        movieList.get(1).setVerified(false);
-
-        List<Movie> notVerifiedList = new ArrayList<Movie>();
-        notVerifiedList.add(movieList.get(0));
-        notVerifiedList.add(movieList.get(1));
-
-        when(mockedDAO.getNotVerified()).thenReturn(notVerifiedList);
-
-        final Response response = jerseyTest.target("books").path("/notVerified").request().get();
-
-        assertThat(response.getStatus()).isEqualTo(OK_CODE);
-        assertThat(response.readEntity(
-            new GenericType<List<Movie>>() { }
-                )).containsExactlyElementsOf(notVerifiedList);
-    }
 
     @Test
     public void movie_resource_returns_a_server_error_code_when_dao_throws_exception_while_searching_by_name( ) {
@@ -127,7 +106,7 @@ public class MovieResourceTest extends ArticleResourceTest<Movie, MovieDAO> {
             ));
 
             assertThat(response.getStatus()).isEqualTo(OK_CODE);
-            verify(mockedDAO).insert(movie);
+            verify(mockedDAO).save(movie);
         }
     }
 
@@ -138,7 +117,7 @@ public class MovieResourceTest extends ArticleResourceTest<Movie, MovieDAO> {
         );
 
         for (final Movie movie : movieList) {
-            doThrow(new PersistenceException()).when(mockedDAO).insert(movie);
+            doThrow(new PersistenceException()).when(mockedDAO).save(movie);
 
             final Response response = request.post(Entity.entity(
                 movie, MediaType.APPLICATION_JSON_TYPE
@@ -146,6 +125,20 @@ public class MovieResourceTest extends ArticleResourceTest<Movie, MovieDAO> {
 
             assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
         }
+    }
+
+    @Test
+    public void movie_resource_returns_not_verified_movies( ) {
+        when(mockedDAO.findNotVerified()).thenReturn(movieList);
+
+        final Response response = jerseyTest.target("movies").path(
+            "/notVerified"
+        ).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(OK_CODE);
+        assertThat(response.readEntity(
+            new GenericType<List<Movie>>() { }
+        )).containsExactlyElementsOf(movieList);
     }
 
 }

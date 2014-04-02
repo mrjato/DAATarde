@@ -12,14 +12,15 @@ define(['app'], function(app) {
             templateUrl: 'partials/articleAdd.html',
             controller: 'ArticleAddController'
         });
-        
+
         $routeProvider.when('/articleVerify', {
             templateUrl: 'partials/articleVerify.html',
-            controller: 'ArticleVerifyController'
+            controller: 'ArticleVerifyController',
+            resolve: { articles: function(Book) { return Book.notVerified(); } }
         });
 
-        // temporal while listing not implemented in REST API: listing redirects
-        // to an empty search
+        // temporal while listing not implemented in REST API: listing performs
+        // an empty search
         $routeProvider.when('/books', {
             templateUrl: 'partials/articleList.html',
             controller: 'ArticleListController',
@@ -67,13 +68,6 @@ define(['app'], function(app) {
             templateUrl: 'partials/articleList.html',
             controller: 'ArticleListController',
             resolve: { articles: function($route, Music) { return Music.search({ search: $route.current.params.terms }); }
-            },
-        });
-        
-        $routeProvider.when('/books/notVerified', {
-            templateUrl: 'partials/articleVerify.html',
-            controller: 'ArticleVerifyController',
-            resolve: { articles: function($route, Book) { return Book.notVerified(); }
             },
         });
 

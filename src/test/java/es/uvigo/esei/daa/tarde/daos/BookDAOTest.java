@@ -64,8 +64,9 @@ public class BookDAOTest extends BaseDAOTest {
     private void unverifyBook(final Book b) {
         entityManager.getTransaction().begin();
 
-        b.setVerified(false);
-        entityManager.merge(b);
+        final Book book = entityManager.find(Book.class, b.getId());
+        book.setVerified(false);
+        entityManager.merge(book);
 
         entityManager.getTransaction().commit();
     }
@@ -140,7 +141,7 @@ public class BookDAOTest extends BaseDAOTest {
     public void book_dao_can_insert_books( ) {
         for (final Book book : bookList) {
             final Book inserted = new Book(book.getName(), book.getDate());
-            dao.insert(inserted);
+            dao.save(inserted);
 
             final Long id = inserted.getId();
             assertThat(id).isNotNull();
@@ -149,19 +150,20 @@ public class BookDAOTest extends BaseDAOTest {
             assertThat(found).isEqualTo(inserted);
         }
     }
-    
+
     @Test
     public void book_dao_can_update_books( ) {
-        for (final Book book : bookList) {
+        for (final Book b : bookList) {
+            final Book book = entityManager.find(Book.class, b.getId());
             book.setVerified(!book.isVerified());
-            
-            dao.update(book);
-            
+
+            dao.save(book);
+
             final Book found = entityManager.find(Book.class, book.getId());
             assertThat(found.isVerified()).isEqualTo(book.isVerified());
         }
     }
-    
+
     @Test
     public void book_dao_should_throw_an_exception_when_inserting_an_already_inserted_book( ) {
         thrown.expect(PersistenceException.class);

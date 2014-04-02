@@ -1,23 +1,22 @@
 <div id="globalAddArticles">
     <form novalidate method="post" name="form" class="form" ng-submit="add()">
-        <label for="user">Nombre: <span ng-show="form.name.$error.required">*</span><br /></label>
+        <label for="user">Nombre: <span ng-show="form.name.$error.required">*</span></label><br />
         <input class="form-control" type="text" ng-model="article.name" name="name" placeholder="Nombre del artículo" required /><br />
 
-        <label for="emailaddress">Fecha: <span ng-show="form.date.$error.required">*</span><br /></label>
+        <label for="emailaddress">Fecha: <span ng-show="form.date.$error.required">*</span></label><br />
         <input class="form-control" type="date" min="1" max="10" ng-model="article.date" name="date" required /><br />
 
-        <label for="terms">Descripción: <span ng-show="form.description.$error.required">*</span><br /></label>
+        <label for="terms">Descripción: <span ng-show="form.description.$error.required">*</span></label><br />
         <textarea class="form-control" rows="6" cols="30" placeholder=" Añade una descripción..." ng-model="article.description" name="description" required></textarea><br />
 
-        <!-- Temporarily disabled while not knowing how to upload an image with
-             more data in the same form -->
+        <!-- Temporarily disabled while not knowing how to upload an image with more data in the same form -->
         <!-- <label for="comments">Imagen: <span ng-show="form.picture.$error.required">*</span><br /></label><br /> -->
         <!-- <input class="btn btn-default" type="file" ng-model="article.picture" name="picture" /><br /> -->
 
         <label for="user">Tipo de Artículo:</label><br />
         <div id="radioButtons">
             <div ng-repeat="cat in categories">
-                <input ng-model="$parent.category" type="radio" name="category" ng-value="{{ cat }}" checked>{{ cat.name }}</br>
+                <input ng-model="$parent.category" type="radio" name="category" ng-value="{{ cat }}" checked>{{ cat.name }}<br />
             </div>
         </div>
 

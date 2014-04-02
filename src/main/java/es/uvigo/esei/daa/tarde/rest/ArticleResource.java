@@ -40,13 +40,13 @@ public abstract class ArticleResource<T extends Article> {
             return Response.serverError().build();
         }
     }
-    
+
     @GET
     @Path("/notVerified")
     public Response searchNotVerified() {
         try {
             return Response.ok(
-                dao.getNotVerified(), MediaType.APPLICATION_JSON
+                dao.findNotVerified(), MediaType.APPLICATION_JSON
             ).build();
         } catch (final Exception _) {
             return Response.serverError().build();
@@ -57,7 +57,7 @@ public abstract class ArticleResource<T extends Article> {
     public Response insert(final T article) {
         try {
 
-            dao.insert(article);
+            dao.save(article);
             return Response.ok(article.getId()).build();
 
         } catch (final IllegalArgumentException | NullPointerException e) {
