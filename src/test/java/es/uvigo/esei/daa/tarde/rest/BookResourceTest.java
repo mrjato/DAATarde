@@ -107,8 +107,7 @@ public class BookResourceTest extends ArticleResourceTest<Book, BookDAO> {
 
         for (final Book book : bookList) {
             final Response response = request.post(Entity.entity(
-                createArticleForm(book),
-                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+                book, MediaType.APPLICATION_JSON_TYPE
             ));
 
             assertThat(response.getStatus()).isEqualTo(OK_CODE);
@@ -126,8 +125,7 @@ public class BookResourceTest extends ArticleResourceTest<Book, BookDAO> {
             doThrow(new PersistenceException()).when(mockedDAO).insert(book);
 
             final Response response = request.post(Entity.entity(
-                createArticleForm(book),
-                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+                book, MediaType.APPLICATION_JSON_TYPE
             ));
 
             assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);

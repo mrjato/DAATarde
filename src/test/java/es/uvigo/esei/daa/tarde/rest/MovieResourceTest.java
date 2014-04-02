@@ -102,8 +102,7 @@ public class MovieResourceTest extends ArticleResourceTest<Movie, MovieDAO> {
 
         for (final Movie movie : movieList) {
             final Response response = request.post(Entity.entity(
-                createArticleForm(movie),
-                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+                movie, MediaType.APPLICATION_JSON_TYPE
             ));
 
             assertThat(response.getStatus()).isEqualTo(OK_CODE);
@@ -121,8 +120,7 @@ public class MovieResourceTest extends ArticleResourceTest<Movie, MovieDAO> {
             doThrow(new PersistenceException()).when(mockedDAO).insert(movie);
 
             final Response response = request.post(Entity.entity(
-                createArticleForm(movie),
-                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+                movie, MediaType.APPLICATION_JSON_TYPE
             ));
 
             assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
