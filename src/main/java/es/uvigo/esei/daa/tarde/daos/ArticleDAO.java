@@ -23,19 +23,6 @@ public abstract class ArticleDAO<T extends Article> extends GenericDAO<T> {
         }
     }
 
-    public List<T> findNotVerified( ) {
-        final EntityManager manager = emFactory.createEntityManager();
-        try {
-            return manager.createQuery(
-                "SELECT a FROM " + getEntityName() + " a "
-                    + "WHERE a.isVerified = false",
-                getGenericClass()
-            ).getResultList();
-        } finally {
-            if (manager.isOpen()) manager.close();
-        }
-    }
-
     public void save(final T article) {
         if (article.getId() == null)
             insert(article);

@@ -7,11 +7,6 @@ define(['services/services'], function(services) {
                 method:  'GET',
                 params:  { search: '' },
                 isArray: true,
-            },
-            notVerified: {
-            	method: 'GET',
-            	url: 'rest/books/notVerified',
-            	isArray: true,
             }
         });
     }]);

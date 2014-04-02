@@ -13,12 +13,6 @@ define(['app'], function(app) {
             controller: 'ArticleAddController'
         });
 
-        $routeProvider.when('/articleVerify', {
-            templateUrl: 'partials/articleVerify.html',
-            controller: 'ArticleVerifyController',
-            resolve: { articles: function(Book) { return Book.notVerified(); } }
-        });
-
         // temporal while listing not implemented in REST API: listing performs
         // an empty search
         $routeProvider.when('/books', {

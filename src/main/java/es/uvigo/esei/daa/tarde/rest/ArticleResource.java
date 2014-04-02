@@ -5,7 +5,6 @@ import java.lang.reflect.ParameterizedType;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,18 +34,6 @@ public abstract class ArticleResource<T extends Article> {
         try {
             return Response.ok(
                 dao.findByName(name), MediaType.APPLICATION_JSON
-            ).build();
-        } catch (final Exception _) {
-            return Response.serverError().build();
-        }
-    }
-
-    @GET
-    @Path("/notVerified")
-    public Response searchNotVerified() {
-        try {
-            return Response.ok(
-                dao.findNotVerified(), MediaType.APPLICATION_JSON
             ).build();
         } catch (final Exception _) {
             return Response.serverError().build();

@@ -132,18 +132,4 @@ public class BookResourceTest extends ArticleResourceTest<Book, BookDAO> {
         }
     }
 
-    @Test
-    public void book_resource_returns_not_verified_books( ) {
-        when(mockedDAO.findNotVerified()).thenReturn(bookList);
-
-        final Response response = jerseyTest.target("books").path(
-            "/notVerified"
-        ).request().get();
-
-        assertThat(response.getStatus()).isEqualTo(OK_CODE);
-        assertThat(response.readEntity(
-            new GenericType<List<Book>>() { }
-        )).containsExactlyElementsOf(bookList);
-    }
-
 }

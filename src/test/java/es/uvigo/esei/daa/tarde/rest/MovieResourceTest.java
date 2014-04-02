@@ -127,18 +127,4 @@ public class MovieResourceTest extends ArticleResourceTest<Movie, MovieDAO> {
         }
     }
 
-    @Test
-    public void movie_resource_returns_not_verified_movies( ) {
-        when(mockedDAO.findNotVerified()).thenReturn(movieList);
-
-        final Response response = jerseyTest.target("movies").path(
-            "/notVerified"
-        ).request().get();
-
-        assertThat(response.getStatus()).isEqualTo(OK_CODE);
-        assertThat(response.readEntity(
-            new GenericType<List<Movie>>() { }
-        )).containsExactlyElementsOf(movieList);
-    }
-
 }

@@ -127,18 +127,4 @@ public class ComicResourceTest extends ArticleResourceTest<Comic, ComicDAO> {
         }
     }
 
-    @Test
-    public void comic_resource_returns_not_verified_comics( ) {
-        when(mockedDAO.findNotVerified()).thenReturn(comicList);
-
-        final Response response = jerseyTest.target("comics").path(
-            "/notVerified"
-        ).request().get();
-
-        assertThat(response.getStatus()).isEqualTo(OK_CODE);
-        assertThat(response.readEntity(
-            new GenericType<List<Comic>>() { }
-        )).containsExactlyElementsOf(comicList);
-    }
-
 }

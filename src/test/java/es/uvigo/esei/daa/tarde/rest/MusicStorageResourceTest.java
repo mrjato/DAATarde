@@ -129,18 +129,4 @@ public class MusicStorageResourceTest extends ArticleResourceTest<MusicStorage, 
         }
     }
 
-    @Test
-    public void music_storage_resource_returns_not_verified_music_storages( ) {
-        when(mockedDAO.findNotVerified()).thenReturn(musicList);
-
-        final Response response = jerseyTest.target("musicstorages").path(
-            "/notVerified"
-        ).request().get();
-
-        assertThat(response.getStatus()).isEqualTo(OK_CODE);
-        assertThat(response.readEntity(
-            new GenericType<List<MusicStorage>>() { }
-        )).containsExactlyElementsOf(musicList);
-    }
-
 }
