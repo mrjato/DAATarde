@@ -69,6 +69,13 @@ define(['app'], function(app) {
             resolve: { articles: function($route, Music) { return Music.search({ search: $route.current.params.terms }); }
             },
         });
+        
+        $routeProvider.when('/books/notVerified', {
+            templateUrl: 'partials/articleVerify.html',
+            controller: 'ArticleVerifyController',
+            resolve: { articles: function($route, Book) { return Book.notVerified(); }
+            },
+        });
 
         $routeProvider.otherwise({ redirectTo: '/' });
 
