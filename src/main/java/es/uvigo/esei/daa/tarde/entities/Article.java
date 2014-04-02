@@ -91,7 +91,7 @@ public abstract class Article {
     }
 
     public boolean isVerified( ) {
-        return isVerified;
+        return this.isVerified;
     }
 
     public void setDescription(final String description) {

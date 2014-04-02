@@ -5,15 +5,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
+
+import javax.persistence.PersistenceException;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import es.uvigo.esei.daa.tarde.TestUtils;
+import es.uvigo.esei.daa.tarde.entities.Comic;
 import es.uvigo.esei.daa.tarde.entities.Movie;
 
 @RunWith(Parameterized.class)
@@ -61,6 +67,9 @@ public class MovieDAOTest extends BaseDAOTest {
             }}
         });
     }
+    
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
     private MovieDAO dao;
     private final List<Movie> movieList;
@@ -155,5 +164,27 @@ public class MovieDAOTest extends BaseDAOTest {
             final Movie found = entityManager.find(Movie.class, id);
             assertThat(found).isEqualTo(inserted);
         }
+    }
+    
+    @Test
+    public void movie_dao_can_update_movies( ) {
+        for (final Movie movie : movieList) {
+            movie.setVerified(!movie.isVerified());
+
+            dao.update(movie);
+
+            final Movie found = entityManager.find(Movie.class, movie.getId());
+            assertThat(found.isVerified()).isEqualTo(movie.isVerified());
+        }
+    }
+
+    @Test
+    public void movie_dao_should_throw_an_exception_when_inserting_an_already_inserted_movie( ) {
+        thrown.expect(PersistenceException.class);
+
+        final Random random = new Random();
+        final Movie movie = movieList.get(random.nextInt(movieList.size()));
+
+        dao.insert(movie);
     }
 }

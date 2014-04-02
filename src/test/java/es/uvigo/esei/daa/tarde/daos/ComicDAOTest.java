@@ -5,10 +5,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
+
+import javax.persistence.PersistenceException;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -34,6 +39,9 @@ public class ComicDAOTest extends BaseDAOTest {
             }}
         });
     }
+    
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
     private ComicDAO dao;
     private final List<Comic> comicList;
@@ -130,4 +138,25 @@ public class ComicDAOTest extends BaseDAOTest {
         }
     }
 
+    @Test
+    public void comic_dao_can_update_comics( ) {
+        for (final Comic comic : comicList) {
+            comic.setVerified(!comic.isVerified());
+
+            dao.update(comic);
+
+            final Comic found = entityManager.find(Comic.class, comic.getId());
+            assertThat(found.isVerified()).isEqualTo(comic.isVerified());
+        }
+    }
+
+    @Test
+    public void comic_dao_should_throw_an_exception_when_inserting_an_already_inserted_comic( ) {
+        thrown.expect(PersistenceException.class);
+
+        final Random random = new Random();
+        final Comic comic = comicList.get(random.nextInt(comicList.size()));
+
+        dao.insert(comic);
+    }
 }

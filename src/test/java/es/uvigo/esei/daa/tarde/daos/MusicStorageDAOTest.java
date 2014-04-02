@@ -5,10 +5,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
+
+import javax.persistence.PersistenceException;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -51,12 +56,15 @@ public class MusicStorageDAOTest extends BaseDAOTest {
         });
     }
 
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
+
     private MusicStorageDAO dao;
     private final List<MusicStorage> musicList;
 
     public MusicStorageDAOTest(
         final String _, final MusicStorage[ ] musicList
-    ) {
+            ) {
         this.musicList = Arrays.asList(musicList);
     }
 
@@ -139,7 +147,7 @@ public class MusicStorageDAOTest extends BaseDAOTest {
         for (final MusicStorage music : musicList) {
             final MusicStorage inserted = new MusicStorage(
                 music.getName(), music.getDate()
-            );
+                    );
             dao.insert(inserted);
 
             final Long id = inserted.getId();
@@ -147,9 +155,30 @@ public class MusicStorageDAOTest extends BaseDAOTest {
 
             final MusicStorage found = entityManager.find(
                 MusicStorage.class, id
-            );
+                    );
             assertThat(found).isEqualTo(inserted);
         }
     }
 
+    @Test
+    public void music_storage_dao_can_update_music_storages( ) {
+        for (final MusicStorage musicStorage : musicList) {
+            musicStorage.setVerified(!musicStorage.isVerified());
+
+            dao.update(musicStorage);
+
+            final MusicStorage found = entityManager.find(MusicStorage.class, musicStorage.getId());
+            assertThat(found.isVerified()).isEqualTo(musicStorage.isVerified());
+        }
+    }
+
+    @Test
+    public void music_storage_dao_should_throw_an_exception_when_inserting_an_already_inserted_music_storage( ) {
+        thrown.expect(PersistenceException.class);
+
+        final Random random = new Random();
+        final MusicStorage musicStorage = musicList.get(random.nextInt(musicList.size()));
+
+        dao.insert(musicStorage);
+    }
 }

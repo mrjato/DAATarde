@@ -15,9 +15,35 @@ public abstract class ArticleDAO<T extends Article> extends GenericDAO<T> {
             return manager.createQuery(
                 "SELECT a FROM " + getEntityName() + " a WHERE UPPER(a.name) LIKE :name AND a.isVerified = true",
                 getGenericClass()
-            ).setParameter("name", "%" + name.toUpperCase() + "%").getResultList();
+                    ).setParameter("name", "%" + name.toUpperCase() + "%").getResultList();
         } finally {
             if (manager.isOpen()) manager.close();
+        }
+    }
+
+    public List<T> getNotVerified() {
+        final EntityManager manager = emFactory.createEntityManager();
+        try {
+            return manager.createQuery(
+                "SELECT a FROM " + getEntityName() + " a WHERE a.isVerified = false",
+                getGenericClass()
+                    ).getResultList();
+        } finally {
+            if (manager.isOpen()) manager.close();
+        }
+    }
+
+    public void update(final T article) {
+        final EntityManager manager = emFactory.createEntityManager();
+        final EntityTransaction transaction = manager.getTransaction();
+
+        try {
+            transaction.begin();
+            manager.merge(article);
+            transaction.commit();
+        } finally {
+            if (transaction.isActive()) transaction.rollback();
+            if (manager.isOpen())       manager.close();
         }
     }
 
@@ -34,5 +60,4 @@ public abstract class ArticleDAO<T extends Article> extends GenericDAO<T> {
             if (manager.isOpen())       manager.close();
         }
     }
-
 }

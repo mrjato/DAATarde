@@ -149,7 +149,19 @@ public class BookDAOTest extends BaseDAOTest {
             assertThat(found).isEqualTo(inserted);
         }
     }
-
+    
+    @Test
+    public void book_dao_can_update_books( ) {
+        for (final Book book : bookList) {
+            book.setVerified(!book.isVerified());
+            
+            dao.update(book);
+            
+            final Book found = entityManager.find(Book.class, book.getId());
+            assertThat(found.isVerified()).isEqualTo(book.isVerified());
+        }
+    }
+    
     @Test
     public void book_dao_should_throw_an_exception_when_inserting_an_already_inserted_book( ) {
         thrown.expect(PersistenceException.class);
@@ -159,5 +171,4 @@ public class BookDAOTest extends BaseDAOTest {
 
         dao.insert(book);
     }
-
 }
