@@ -8,9 +8,14 @@ define(['app'], function(app) {
             controller: 'HomeController'
         });
 
-        $routeProvider.when('/addArticle', {
-            templateUrl: 'partials/addArticle.html',
+        $routeProvider.when('/articleAdd', {
+            templateUrl: 'partials/articleAdd.html',
             controller: 'ArticleAddController'
+        });
+        
+        $routeProvider.when('/articleVerify', {
+            templateUrl: 'partials/articleVerify.html',
+            controller: 'ArticleVerifyController'
         });
 
         // temporal while listing not implemented in REST API: listing redirects

@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import es.uvigo.esei.daa.tarde.daos.MovieDAO;
+import es.uvigo.esei.daa.tarde.entities.Comic;
 import es.uvigo.esei.daa.tarde.entities.Movie;
 
 @RunWith(Parameterized.class)
@@ -81,6 +83,25 @@ public class MovieResourceTest extends ArticleResourceTest<Movie, MovieDAO> {
         assertThat(response.readEntity(
             new GenericType<List<Movie>>() { }
         )).containsExactlyElementsOf(movieList);
+    }
+    
+    @Test
+    public void movie_resource_returns_not_verified_movies( ) {
+        movieList.get(0).setVerified(false);
+        movieList.get(1).setVerified(false);
+
+        List<Movie> notVerifiedList = new ArrayList<Movie>();
+        notVerifiedList.add(movieList.get(0));
+        notVerifiedList.add(movieList.get(1));
+
+        when(mockedDAO.getNotVerified()).thenReturn(notVerifiedList);
+
+        final Response response = jerseyTest.target("books").path("/notVerified").request().get();
+
+        assertThat(response.getStatus()).isEqualTo(OK_CODE);
+        assertThat(response.readEntity(
+            new GenericType<List<Movie>>() { }
+                )).containsExactlyElementsOf(notVerifiedList);
     }
 
     @Test

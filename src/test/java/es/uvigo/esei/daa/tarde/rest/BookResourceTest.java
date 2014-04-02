@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -86,6 +87,25 @@ public class BookResourceTest extends ArticleResourceTest<Book, BookDAO> {
         assertThat(response.readEntity(
             new GenericType<List<Book>>() { }
         )).containsExactlyElementsOf(bookList);
+    }
+    
+    @Test
+    public void book_resource_returns_not_verified_books( ) {
+        bookList.get(0).setVerified(false);
+        bookList.get(1).setVerified(false);
+        
+        List<Book> notVerifiedList = new ArrayList<Book>();
+        notVerifiedList.add(bookList.get(0));
+        notVerifiedList.add(bookList.get(1));
+        
+        when(mockedDAO.getNotVerified()).thenReturn(notVerifiedList);
+
+        final Response response = jerseyTest.target("books").path("/notVerified").request().get();
+
+        assertThat(response.getStatus()).isEqualTo(OK_CODE);
+        assertThat(response.readEntity(
+            new GenericType<List<Book>>() { }
+        )).containsExactlyElementsOf(notVerifiedList);
     }
 
     @Test

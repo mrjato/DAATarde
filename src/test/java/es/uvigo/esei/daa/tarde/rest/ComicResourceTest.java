@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -62,12 +63,12 @@ public class ComicResourceTest extends ArticleResourceTest<Comic, ComicDAO> {
 
         final Response response = jerseyTest.target("comics").queryParam(
             "search", comicListName
-        ).request().get();
+                ).request().get();
 
         assertThat(response.getStatus()).isEqualTo(OK_CODE);
         assertThat(response.readEntity(
             new GenericType<List<Comic>>() { }
-        )).containsExactlyElementsOf(comicList);
+                )).containsExactlyElementsOf(comicList);
     }
 
     @Test
@@ -76,12 +77,31 @@ public class ComicResourceTest extends ArticleResourceTest<Comic, ComicDAO> {
 
         final Response response = jerseyTest.target("comics").queryParam(
             "search", ""
-        ).request().get();
+                ).request().get();
 
         assertThat(response.getStatus()).isEqualTo(OK_CODE);
         assertThat(response.readEntity(
             new GenericType<List<Comic>>() { }
-        )).containsExactlyElementsOf(comicList);
+                )).containsExactlyElementsOf(comicList);
+    }
+
+    @Test
+    public void comic_resource_returns_not_verified_comics( ) {
+        comicList.get(0).setVerified(false);
+        comicList.get(1).setVerified(false);
+
+        List<Comic> notVerifiedList = new ArrayList<Comic>();
+        notVerifiedList.add(comicList.get(0));
+        notVerifiedList.add(comicList.get(1));
+
+        when(mockedDAO.getNotVerified()).thenReturn(notVerifiedList);
+
+        final Response response = jerseyTest.target("books").path("/notVerified").request().get();
+
+        assertThat(response.getStatus()).isEqualTo(OK_CODE);
+        assertThat(response.readEntity(
+            new GenericType<List<Comic>>() { }
+                )).containsExactlyElementsOf(notVerifiedList);
     }
 
     @Test
@@ -90,7 +110,7 @@ public class ComicResourceTest extends ArticleResourceTest<Comic, ComicDAO> {
 
         final Response response = jerseyTest.target("comics").queryParam(
             "search", comicListName
-        ).request().get();
+                ).request().get();
 
         assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
     }
@@ -99,12 +119,12 @@ public class ComicResourceTest extends ArticleResourceTest<Comic, ComicDAO> {
     public void comic_resource_is_able_to_insert_comics( ) {
         final Builder request = jerseyTest.target("comics").request(
             MediaType.APPLICATION_JSON
-        );
+                );
 
         for (final Comic comic : comicList) {
             final Response response = request.post(Entity.entity(
                 comic, MediaType.APPLICATION_JSON_TYPE
-            ));
+                    ));
 
             assertThat(response.getStatus()).isEqualTo(OK_CODE);
             verify(mockedDAO).insert(comic);
@@ -115,14 +135,14 @@ public class ComicResourceTest extends ArticleResourceTest<Comic, ComicDAO> {
     public void comic_resource_returns_a_server_error_code_when_dao_throws_exception_while_inserting_a_comic( ) {
         final Builder request = jerseyTest.target("comics").request(
             MediaType.APPLICATION_JSON
-        );
+                );
 
         for (final Comic comic : comicList) {
             doThrow(new PersistenceException()).when(mockedDAO).insert(comic);
 
             final Response response = request.post(Entity.entity(
                 comic, MediaType.APPLICATION_JSON_TYPE
-            ));
+                    ));
 
             assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
         }
