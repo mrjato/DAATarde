@@ -103,8 +103,7 @@ public class ComicResourceTest extends ArticleResourceTest<Comic, ComicDAO> {
 
         for (final Comic comic : comicList) {
             final Response response = request.post(Entity.entity(
-                createArticleForm(comic),
-                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+                comic, MediaType.APPLICATION_JSON_TYPE
             ));
 
             assertThat(response.getStatus()).isEqualTo(OK_CODE);
@@ -122,8 +121,7 @@ public class ComicResourceTest extends ArticleResourceTest<Comic, ComicDAO> {
             doThrow(new PersistenceException()).when(mockedDAO).insert(comic);
 
             final Response response = request.post(Entity.entity(
-                createArticleForm(comic),
-                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+                comic, MediaType.APPLICATION_JSON_TYPE
             ));
 
             assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);

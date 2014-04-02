@@ -1,11 +1,8 @@
 package es.uvigo.esei.daa.tarde.rest;
 
-import static org.apache.commons.codec.binary.Base64.decodeBase64;
-
 import java.lang.reflect.ParameterizedType;
 
 import javax.persistence.PersistenceException;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.QueryParam;
@@ -44,17 +41,8 @@ public abstract class ArticleResource<T extends Article> {
     }
 
     @POST
-    public Response insert(
-        @FormParam("name")        final String name,
-        @FormParam("date")        final String date,
-        @FormParam("description") final String description,
-        @FormParam("picture")     final String picture
-    ) {
+    public Response insert(final T article) {
         try {
-
-            final T article = articleFactory(
-                name, new LocalDate(date), description, decodeBase64(picture)
-            );
 
             dao.insert(article);
             return Response.ok(article.getId()).build();

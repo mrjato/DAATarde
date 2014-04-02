@@ -104,8 +104,7 @@ public class MusicStorageResourceTest extends ArticleResourceTest<MusicStorage, 
 
         for (final MusicStorage music : musicList) {
             final Response response = request.post(Entity.entity(
-                createArticleForm(music),
-                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+                music, MediaType.APPLICATION_JSON_TYPE
             ));
 
             assertThat(response.getStatus()).isEqualTo(OK_CODE);
@@ -123,8 +122,7 @@ public class MusicStorageResourceTest extends ArticleResourceTest<MusicStorage, 
             doThrow(new PersistenceException()).when(mockedDAO).insert(music);
 
             final Response response = request.post(Entity.entity(
-                createArticleForm(music),
-                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+                music, MediaType.APPLICATION_JSON_TYPE
             ));
 
             assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
