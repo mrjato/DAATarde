@@ -2,7 +2,6 @@ package es.uvigo.esei.daa.tarde.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,12 +12,10 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
-import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.codec.binary.Base64;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +26,7 @@ import es.uvigo.esei.daa.tarde.daos.BookDAO;
 import es.uvigo.esei.daa.tarde.entities.Book;
 
 @RunWith(Parameterized.class)
-public class BookResourceTest extends BaseResourceTest {
+public class BookResourceTest extends ArticleResourceTest<Book, BookDAO> {
 
     @Parameters(name = "{index}: {0}")
     public static final Collection<Object[ ]> createBookData( ) {
@@ -54,27 +51,13 @@ public class BookResourceTest extends BaseResourceTest {
         });
     }
 
-    private final BookDAO    mockedDAO;
     private final String     bookListName;
     private final List<Book> bookList;
 
     public BookResourceTest(final String bookListName, final Book [ ] bookList) {
         this.bookListName = bookListName;
         this.bookList     = Arrays.asList(bookList);
-
-        this.mockedDAO = mock(BookDAO.class);
         registerResourceUnderTest(new BookResource(mockedDAO));
-    }
-
-    private final Form createBookForm(final Book book) {
-        final Form bookForm = new Form();
-
-        bookForm.param("name", book.getName());
-        bookForm.param("date", book.getDate().toString());
-        bookForm.param("description", book.getDescription());
-        bookForm.param("picture", Base64.encodeBase64URLSafeString(book.getPicture()));
-
-        return bookForm;
     }
 
     @Test
@@ -86,8 +69,9 @@ public class BookResourceTest extends BaseResourceTest {
         ).request().get();
 
         assertThat(response.getStatus()).isEqualTo(OK_CODE);
-        assertThat(response.readEntity(new GenericType<List<Book>>() { }))
-            .containsExactlyElementsOf(bookList);
+        assertThat(response.readEntity(
+            new GenericType<List<Book>>() { }
+        )).containsExactlyElementsOf(bookList);
     }
 
     @Test
@@ -99,8 +83,9 @@ public class BookResourceTest extends BaseResourceTest {
         ).request().get();
 
         assertThat(response.getStatus()).isEqualTo(OK_CODE);
-        assertThat(response.readEntity(new GenericType<List<Book>>() { }))
-            .containsExactlyElementsOf(bookList);
+        assertThat(response.readEntity(
+            new GenericType<List<Book>>() { }
+        )).containsExactlyElementsOf(bookList);
     }
 
     @Test
@@ -122,7 +107,7 @@ public class BookResourceTest extends BaseResourceTest {
 
         for (final Book book : bookList) {
             final Response response = request.post(Entity.entity(
-                createBookForm(book),
+                createArticleForm(book),
                 MediaType.APPLICATION_FORM_URLENCODED_TYPE
             ));
 
@@ -141,7 +126,7 @@ public class BookResourceTest extends BaseResourceTest {
             doThrow(new PersistenceException()).when(mockedDAO).insert(book);
 
             final Response response = request.post(Entity.entity(
-                createBookForm(book),
+                createArticleForm(book),
                 MediaType.APPLICATION_FORM_URLENCODED_TYPE
             ));
 

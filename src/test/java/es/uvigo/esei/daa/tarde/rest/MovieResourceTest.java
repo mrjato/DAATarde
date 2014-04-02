@@ -1,14 +1,19 @@
 package es.uvigo.esei.daa.tarde.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.joda.time.LocalDate;
@@ -21,7 +26,7 @@ import es.uvigo.esei.daa.tarde.daos.MovieDAO;
 import es.uvigo.esei.daa.tarde.entities.Movie;
 
 @RunWith(Parameterized.class)
-public class MovieResourceTest extends BaseResourceTest {
+public class MovieResourceTest extends ArticleResourceTest<Movie, MovieDAO> {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[ ]> createMovieData( ) {
@@ -41,20 +46,17 @@ public class MovieResourceTest extends BaseResourceTest {
         });
     }
 
-    private final MovieDAO    mockedDAO;
     private final String      movieListName;
     private final List<Movie> movieList;
 
     public MovieResourceTest(final String movieListName, final Movie [ ] movieList) {
         this.movieListName = movieListName;
         this.movieList     = Arrays.asList(movieList);
-
-        this.mockedDAO = mock(MovieDAO.class);
         registerResourceUnderTest(new MovieResource(mockedDAO));
     }
 
     @Test
-    public void movie_resource_is_able_to_search_by_title( ) {
+    public void movie_resource_is_able_to_search_by_name( ) {
         when(mockedDAO.findByName(movieListName)).thenReturn(movieList);
 
         final Response response = jerseyTest.target("movies").queryParam(
@@ -62,8 +64,69 @@ public class MovieResourceTest extends BaseResourceTest {
         ).request().get();
 
         assertThat(response.getStatus()).isEqualTo(OK_CODE);
-        assertThat(response.readEntity(new GenericType<List<Movie>>() { }))
-            .containsExactlyElementsOf(movieList);
+        assertThat(response.readEntity(
+            new GenericType<List<Movie>>() { }
+        )).containsExactlyElementsOf(movieList);
+    }
+
+    @Test
+    public void movie_resource_returns_all_movies_when_searching_with_empty_name( ) {
+        when(mockedDAO.findByName("")).thenReturn(movieList);
+
+        final Response response = jerseyTest.target("movies").queryParam(
+            "search", ""
+        ).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(OK_CODE);
+        assertThat(response.readEntity(
+            new GenericType<List<Movie>>() { }
+        )).containsExactlyElementsOf(movieList);
+    }
+
+    @Test
+    public void movie_resource_returns_a_server_error_code_when_dao_throws_exception_while_searching_by_name( ) {
+        when(mockedDAO.findByName(movieListName)).thenThrow(new PersistenceException());
+
+        final Response response = jerseyTest.target("movies").queryParam(
+            "search", movieListName
+        ).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
+    }
+
+    @Test
+    public void movie_resource_is_able_to_insert_movies( ) {
+        final Builder request = jerseyTest.target("movies").request(
+            MediaType.APPLICATION_JSON
+        );
+
+        for (final Movie movie : movieList) {
+            final Response response = request.post(Entity.entity(
+                createArticleForm(movie),
+                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+            ));
+
+            assertThat(response.getStatus()).isEqualTo(OK_CODE);
+            verify(mockedDAO).insert(movie);
+        }
+    }
+
+    @Test
+    public void movie_resource_returns_a_server_error_code_when_dao_throws_exception_while_inserting_a_movie( ) {
+        final Builder request = jerseyTest.target("movies").request(
+            MediaType.APPLICATION_JSON
+        );
+
+        for (final Movie movie : movieList) {
+            doThrow(new PersistenceException()).when(mockedDAO).insert(movie);
+
+            final Response response = request.post(Entity.entity(
+                createArticleForm(movie),
+                MediaType.APPLICATION_FORM_URLENCODED_TYPE
+            ));
+
+            assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
+        }
     }
 
 }

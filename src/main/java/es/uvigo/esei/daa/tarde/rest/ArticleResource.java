@@ -1,5 +1,7 @@
 package es.uvigo.esei.daa.tarde.rest;
 
+import static org.apache.commons.codec.binary.Base64.decodeBase64;
+
 import java.lang.reflect.ParameterizedType;
 
 import javax.persistence.PersistenceException;
@@ -11,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.codec.binary.Base64;
 import org.joda.time.LocalDate;
 
 import es.uvigo.esei.daa.tarde.daos.ArticleDAO;
@@ -50,28 +51,20 @@ public abstract class ArticleResource<T extends Article> {
         @FormParam("picture")     final String picture
     ) {
         try {
+
             final T article = articleFactory(
-                name,
-                new LocalDate(date),
-                description,
-                Base64.decodeBase64(picture)
+                name, new LocalDate(date), description, decodeBase64(picture)
             );
 
             dao.insert(article);
-            return Response.ok().build();
+            return Response.ok(article.getId()).build();
 
-        } catch (final IllegalArgumentException iae) {
-
-            iae.printStackTrace();
-            return Response.status(Status.BAD_REQUEST).entity(
-                iae.getMessage()
-            ).build();
-
+        } catch (final IllegalArgumentException | NullPointerException e) {
+            e.printStackTrace();
+            return Response.status(Status.BAD_REQUEST).build();
         } catch (final PersistenceException pe) {
-
             pe.printStackTrace();
-            return Response.serverError().entity(pe.getMessage()).build();
-
+            return Response.serverError().build();
         }
     }
 
@@ -94,7 +87,7 @@ public abstract class ArticleResource<T extends Article> {
             ).newInstance(name, description, date, picture);
         } catch (final Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
