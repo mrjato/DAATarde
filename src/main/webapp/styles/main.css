@@ -1,9 +1,32 @@
 /* main.css */
-body {
-    padding-top: 70px;
+#container, #hader, body, #footer {
+width: 984px;
 }
 
-@media(max-width : 991px) {
+#container2 {
+	margin: 0 auto;
+	text-align: left;
+}
+
+
+body{
+	margin: 0 auto;
+	padding: 0;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000;
+	text-align: center; 
+}
+
+#menu_superior {
+	float: left;
+	width: 984px;
+	border-bottom: 1px solid #000;
+	padding: 3px 0;
+}
+
+
+@media(max-width : 984px) {
     .navbar-header {
         float: none;
     }
@@ -92,3 +115,44 @@ input[type=radio], input[type=checkbox] {
 br {
     clear: left;
 }
+/*Para header*/
+#header logo {
+	display:block;
+}
+
+#logo {
+	height: 80px;
+}
+
+#logo_uvigo {
+	
+	background-image: url("../images/logo.jpg");
+	position: absolute;
+	top: 0;
+	width: 230px; 
+	height: 75px;
+	
+}
+
+#header img.derecha {
+	float: right;
+}
+
+.izquierda {
+	float:left;
+	position: absolute;
+	width: 230px; 
+	height: 75px;
+}
+
+#header img.izquierda{
+	float: left;
+}
+
+#cuerpo{
+	overflow: hidden; 
+	display: inline-block;
+	
+	
+}
+

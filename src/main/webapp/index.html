@@ -1,18 +1,23 @@
 <!doctype html>
 <html lang="es">
 <head>
+	<title>DAATarde - Universidade de Vigo</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Universidade de Vigo">
+    <meta name="description" content="Proyecto DAATArde 2013-2014">
     <title>DAA - Tarde</title>
-
     <link rel="stylesheet" type="text/css" media="all" href="webjars/bootstrap/3.1.1/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" media="all" href="webjars/font-awesome/4.0.3/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" media="all" href="styles/main.css" />
 </head>
 <body>
-    <ng-include src='"partials/navigationBar.html"'></ng-include>
-    <div class="container">
+	
+   	
+    <div class="container2">
+     <ng-include src='"partials/header.html"'></ng-include>
+   	 <ng-include src='"partials/navigationBar.html"'></ng-include>
         <ng-view></ng-view>
     </div>
     <script data-main="scripts/main" src="webjars/requirejs/2.1.11/require.min.js"></script>
