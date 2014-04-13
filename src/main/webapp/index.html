@@ -18,8 +18,11 @@
     <div class="container2">
      <ng-include src='"partials/header.html"'></ng-include>
    	 <ng-include src='"partials/navigationBar.html"'></ng-include>
+   	 
         <ng-view></ng-view>
+        <ng-include src='"partials/footer.html"'></ng-include>
     </div>
+	
     <script data-main="scripts/main" src="webjars/requirejs/2.1.11/require.min.js"></script>
 </body>
 </html>
