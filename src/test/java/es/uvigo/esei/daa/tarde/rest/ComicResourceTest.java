@@ -26,7 +26,7 @@ import es.uvigo.esei.daa.tarde.daos.ComicDAO;
 import es.uvigo.esei.daa.tarde.entities.Comic;
 
 @RunWith(Parameterized.class)
-public class ComicResourceTest extends ArticleResourceTest<Comic, ComicDAO> {
+public class ComicResourceTest extends ResourceTest<Comic, ComicDAO> {
 
     @Parameters(name = "{index}: {0}")
     public static final Collection<Object[ ]> createComicData( ) {

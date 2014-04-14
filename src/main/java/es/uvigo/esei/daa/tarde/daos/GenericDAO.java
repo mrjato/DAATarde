@@ -1,6 +1,7 @@
 package es.uvigo.esei.daa.tarde.daos;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManagerFactory;
@@ -26,6 +27,13 @@ public abstract class GenericDAO<T> {
         return (Class<T>) (
             (ParameterizedType) getClass().getGenericSuperclass()
         ).getActualTypeArguments()[0];
+    }
+    
+    protected static <T> T[] concat(T[] first, T[] second) {
+        T[] result = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, result, first.length, second.length);
+        
+        return result;
     }
 
 }

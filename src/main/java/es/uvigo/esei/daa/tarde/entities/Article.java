@@ -13,13 +13,15 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "articles")
-public abstract class Article {
+public class Article {
 
     @Id
     @GeneratedValue
@@ -108,11 +110,29 @@ public abstract class Article {
         this.isVerified = isVerified;
     }
 
-    @Override
-    public abstract int hashCode( );
+    
+    public final int hashCode( ) {
+        final HashCodeBuilder builder = new HashCodeBuilder();
 
-    @Override
-    public abstract boolean equals(final Object obj);
+        builder.append(getName());
+        builder.append(getDate());
+
+        return builder.toHashCode();
+    }
+
+    
+    public final boolean equals(final Object obj) {
+        if (obj == this) return true;
+        if (obj == null || !(obj instanceof Article)) return false;
+
+        final Article that = (Article) obj;
+        final EqualsBuilder builder = new EqualsBuilder();
+
+        builder.append(that.getName(), this.getName());
+        builder.append(that.getDate(), this.getDate());
+
+        return builder.isEquals();
+    }
 
 }
 

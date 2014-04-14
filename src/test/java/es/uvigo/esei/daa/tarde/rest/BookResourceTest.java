@@ -26,7 +26,7 @@ import es.uvigo.esei.daa.tarde.daos.BookDAO;
 import es.uvigo.esei.daa.tarde.entities.Book;
 
 @RunWith(Parameterized.class)
-public class BookResourceTest extends ArticleResourceTest<Book, BookDAO> {
+public class BookResourceTest extends ResourceTest<Book, BookDAO> {
 
     @Parameters(name = "{index}: {0}")
     public static final Collection<Object[ ]> createBookData( ) {

@@ -13,7 +13,7 @@ import es.uvigo.esei.daa.tarde.entities.MusicStorage;
 @Path("/musicstorages")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MusicStorageResource extends ArticleResource<MusicStorage> {
+public class MusicStorageResource extends Resource<MusicStorage> {
 
     public MusicStorageResource( ) {
         super();

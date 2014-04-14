@@ -13,7 +13,7 @@ import es.uvigo.esei.daa.tarde.entities.Comic;
 @Path("/comics")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ComicResource extends ArticleResource<Comic> {
+public class ComicResource extends Resource<Comic> {
 
     public ComicResource( ) {
         super();

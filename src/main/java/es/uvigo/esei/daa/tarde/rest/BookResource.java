@@ -13,7 +13,7 @@ import es.uvigo.esei.daa.tarde.entities.Book;
 @Path("/books")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class BookResource extends ArticleResource<Book> {
+public class BookResource extends Resource<Book> {
 
     public BookResource( ) {
         super();

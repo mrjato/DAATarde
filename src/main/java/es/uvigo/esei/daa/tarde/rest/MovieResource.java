@@ -13,7 +13,7 @@ import es.uvigo.esei.daa.tarde.entities.Movie;
 @Path("/movies")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MovieResource extends ArticleResource<Movie> {
+public class MovieResource extends Resource<Movie> {
 
     public MovieResource( ) {
         super();

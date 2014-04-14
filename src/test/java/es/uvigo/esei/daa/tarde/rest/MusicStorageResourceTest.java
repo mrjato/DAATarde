@@ -26,7 +26,7 @@ import es.uvigo.esei.daa.tarde.daos.MusicStorageDAO;
 import es.uvigo.esei.daa.tarde.entities.MusicStorage;
 
 @RunWith(Parameterized.class)
-public class MusicStorageResourceTest extends ArticleResourceTest<MusicStorage, MusicStorageDAO> {
+public class MusicStorageResourceTest extends ResourceTest<MusicStorage, MusicStorageDAO> {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[ ]> createMusicData( ) {

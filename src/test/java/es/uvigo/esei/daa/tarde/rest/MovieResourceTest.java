@@ -26,7 +26,7 @@ import es.uvigo.esei.daa.tarde.daos.MovieDAO;
 import es.uvigo.esei.daa.tarde.entities.Movie;
 
 @RunWith(Parameterized.class)
-public class MovieResourceTest extends ArticleResourceTest<Movie, MovieDAO> {
+public class MovieResourceTest extends ResourceTest<Movie, MovieDAO> {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[ ]> createMovieData( ) {
