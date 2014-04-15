@@ -1,5 +1,6 @@
 package es.uvigo.esei.daa.tarde.rest;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static javax.ws.rs.core.Response.Status.OK;
 
@@ -12,6 +13,7 @@ import org.junit.Before;
 
 public abstract class BaseResourceTest {
 
+    protected static final int BAD_REQUEST_CODE  = BAD_REQUEST.getStatusCode();
     protected static final int OK_CODE           = OK.getStatusCode();
     protected static final int SERVER_ERROR_CODE = INTERNAL_SERVER_ERROR.getStatusCode();
 

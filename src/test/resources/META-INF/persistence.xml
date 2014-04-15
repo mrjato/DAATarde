@@ -6,11 +6,11 @@
     <description>Testing Persistence Unit (HSQLDB)</description>
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
-    <class>es.uvigo.esei.daa.tarde.entities.Article</class>
-    <class>es.uvigo.esei.daa.tarde.entities.Book</class>
-    <class>es.uvigo.esei.daa.tarde.entities.Comic</class>
-    <class>es.uvigo.esei.daa.tarde.entities.Movie</class>
-    <class>es.uvigo.esei.daa.tarde.entities.MusicStorage</class>
+    <class>es.uvigo.esei.daa.tarde.entities.articles.Article</class>
+    <class>es.uvigo.esei.daa.tarde.entities.articles.Book</class>
+    <class>es.uvigo.esei.daa.tarde.entities.articles.Comic</class>
+    <class>es.uvigo.esei.daa.tarde.entities.articles.Movie</class>
+    <class>es.uvigo.esei.daa.tarde.entities.articles.MusicStorage</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
     <properties>

@@ -15,11 +15,9 @@ public final class PersistenceFactory  {
     }
 
     public static EntityManagerFactory getEntityManagerFactory( ) {
-        if (factory == null) {
-            throw new IllegalStateException(
-                "Context has not yet been initialized."
-            );
-        }
+        if (factory == null) throw new IllegalStateException(
+            "EntityManagerFactory has not yet been created."
+        );
 
         return factory;
     }

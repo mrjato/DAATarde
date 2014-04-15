@@ -1,7 +1,6 @@
 package es.uvigo.esei.daa.tarde.daos;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.Arrays;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityManagerFactory;
