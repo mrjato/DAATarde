@@ -17,6 +17,11 @@ define(['controllers/controllers'], function(controllers) {
             $scope.search = function(category) {
                 $location.path("/" + category.path + "/search/" + $scope.terms);
             };
+            
+            $scope.enter = function(ev) {
+            	 if (ev.which==13)
+            		 $location.path("/" + 'articles'+ "/search/" + $scope.terms);
+            };
 
         }]
     );

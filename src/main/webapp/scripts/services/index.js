@@ -3,5 +3,6 @@ define([
     'services/bookService',
     'services/comicService',
     'services/movieService',
-    'services/musicService'
+    'services/musicService',
+    'services/articleService'
 ], function( ) { });

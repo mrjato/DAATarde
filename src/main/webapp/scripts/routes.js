@@ -15,6 +15,13 @@ define(['app'], function(app) {
 
         // temporal while listing not implemented in REST API: listing performs
         // an empty search
+        
+        
+        $routeProvider.when('/articles', {
+            templateUrl: 'partials/articleList.html',
+            controller: 'ArticleListController',
+            resolve: { articles: function(Article) { return Article.search(); } }
+        });
         $routeProvider.when('/books', {
             templateUrl: 'partials/articleList.html',
             controller: 'ArticleListController',
@@ -36,6 +43,13 @@ define(['app'], function(app) {
             resolve: { articles: function(Music) { return Music.search(); } }
         });
 
+        $routeProvider.when('/articles/search', { redirectTo: '/articles' });
+        $routeProvider.when('/articles/search/:terms*', {
+            templateUrl: 'partials/articleList.html',
+            controller: 'ArticleListController',
+            resolve: { articles: function($route, Article) { return Article.search({ search: $route.current.params.terms }); }
+            },
+        });
         $routeProvider.when('/books/search', { redirectTo: '/books' });
         $routeProvider.when('/books/search/:terms*', {
             templateUrl: 'partials/articleList.html',
