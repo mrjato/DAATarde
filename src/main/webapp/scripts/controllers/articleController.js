@@ -22,6 +22,8 @@ define(['controllers/controllers'], function(controllers) {
                 $resource('rest/' + $scope.category.path).save(
                     $scope.article
                 );
+                window.alert("Artículo " + $scope.article.name + " pendiente de moderación.");
+                                
                 $location.path("/" + $scope.category.path);
             };
         }
