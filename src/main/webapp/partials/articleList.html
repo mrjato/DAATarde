@@ -1,7 +1,12 @@
 <div class="row">
     <div ng-repeat="article in articles" class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title"><strong>{{ article.name }}</strong> ({{ article.date }})</h3>
+        <div class="panel-heading" ng-switch on="article.type">
+        
+            <h3 class="panel-title" ng-switch-when="book"><i class="fa fa-book" title="Libro"></i> <strong>{{ article.name }}</strong> ({{ article.date }}) </h3>
+            <h3 class="panel-title" ng-switch-when="movie"><i class="fa fa-film" title="Pel&iacute;cula"></i> <strong>{{ article.name }}</strong> ({{ article.date }}) </h3>
+            <h3 class="panel-title" ng-switch-when="music"><i class="fa fa-music" title="M&uacute;sica"></i> <strong>{{ article.name }}</strong> ({{ article.date }}) </h3>
+            <h3 class="panel-title" ng-switch-when="comic"><i class="fa fa-comments-o" title="C&oacute;mic"></i> <strong>{{ article.name }}</strong> ({{ article.date }}) </h3>
+  
         </div>
         <div class="panel-body">
             <div class="row">
@@ -16,7 +21,7 @@
             </div>
         </div>
         <div class="panel-footer">
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary" >
                 <i class="fa fa-info-circle"></i> Ver más información
             </button>
             <button type="button" class="btn btn-defailt">
