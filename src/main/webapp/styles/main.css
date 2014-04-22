@@ -157,3 +157,7 @@ br {
 	text-align: right;
 }
 
+.form-control
+{
+	width:inherit !important;
+}
