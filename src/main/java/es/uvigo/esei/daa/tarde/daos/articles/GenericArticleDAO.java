@@ -17,7 +17,8 @@ public abstract class GenericArticleDAO<T extends Article> extends GenericDAO<T>
             return manager.createQuery(
                 "SELECT a FROM " + getEntityName() + " a "
                     + "WHERE UPPER(a.name) LIKE :name "
-                    + "AND a.isVerified = true",
+                    + "AND a.isVerified = true "
+                    + "ORDER BY a.name ASC",
                 getGenericClass()
             ).setParameter("name", "%" + name.toUpperCase() + "%").getResultList();
 
