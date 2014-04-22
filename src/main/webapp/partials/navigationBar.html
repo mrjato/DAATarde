@@ -24,17 +24,7 @@
 						<div class="input-group">
 							<input type="text" ng-keypress="enter($event)" class="form-control" placeholder="Búsqueda"
 								ng-model="terms">
-						
-								
-								<!-- <button type="button" class="btn btn-default dropdown-toggle"
-									data-toggle="dropdown">
-									Categoría <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu pull-right">
-									<li ng-repeat="category in categories"><a
-										ng-click="search(category)">{{ category.name }}</a></li>
-								</ul> -->
-								<select class="form-control" ng-model="selectedCategory" ng-options="category.name for category in categories">
+								<select class="form-control" ng-change=search(selectedCategory) ng-model="selectedCategory" ng-options="category.name for category in categories">
 								</select>
 							
 						</div>
