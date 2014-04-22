@@ -25,9 +25,10 @@ define(['controllers/controllers'], function(controllers) {
             	 if (ev.which==13){
             		 if ($scope.selectedCategory.name != 'Categoría')
             			 $location.path("/" + $scope.selectedCategory.path + "/search/" + $scope.terms);
-            		 else
+            		 else{
             			 $location.path("/" + 'articles'+ "/search/" + $scope.terms);
             		 	 $scope.selectedCategory = $scope.categories[1];
+            		 }
             	 }
             };
 
