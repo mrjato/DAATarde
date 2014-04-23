@@ -27,7 +27,7 @@ public abstract class GenericArticleDAO<T extends Article> extends GenericDAO<T>
         }
     }
     
-    private List<Article> findLatest(int num) {
+    public List<Article> findLatest(int num) {
         final EntityManager manager = emFactory.createEntityManager();
         try {
 
@@ -42,10 +42,6 @@ public abstract class GenericArticleDAO<T extends Article> extends GenericDAO<T>
             if (manager.isOpen())
                 manager.close();
         }
-    }
-    
-    public List<Article> findTenLatest( ) {
-        return findLatest(10);
     }
     
     public void save(final T article) {
