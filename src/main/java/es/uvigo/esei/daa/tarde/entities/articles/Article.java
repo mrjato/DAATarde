@@ -12,7 +12,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
@@ -116,6 +118,11 @@ public abstract class Article {
 
     public void setVerified(final boolean isVerified) {
         this.isVerified = isVerified;
+    }
+
+    @Transient @JsonIgnore
+    public boolean isPersisted( ) {
+        return getId() != null;
     }
 
     @Override
