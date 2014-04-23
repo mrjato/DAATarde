@@ -1,7 +1,14 @@
 define(['controllers/controllers'], function(controllers) {
-    'use strict';
+	
+	var homeLatest = ['$scope', 'articles', function($scope, articles) {
+        articles.$promise.then(function(articles) {
+            articles.forEach(function(article) {
+                article.date = article.date.join('/');
+            });
+            $scope.articles = articles;
+        });
+    }];
 
-    controllers.controller('HomeController', ['$scope', function($scope) {
-    }]);
+    controllers.controller('HomeLatestController', homeLatest);
 
 });
