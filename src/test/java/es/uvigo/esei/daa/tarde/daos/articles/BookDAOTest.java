@@ -124,7 +124,7 @@ public class BookDAOTest extends BaseDAOTest {
     @Test
     public void book_dao_should_return_all_books_when_searching_with_empty_title( ) {
         final List<Book> empty = dao.findByName("");
-        assertThat(empty).isEqualTo(bookList);
+        assertThat(empty).containsAll(bookList);
     }
 
     @Test

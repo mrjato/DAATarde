@@ -117,7 +117,7 @@ public class ArticleDAOTest extends BaseDAOTest {
     @Test
     public void article_dao_should_return_all_articles_when_searching_with_empty_title( ) {
         final List<Article> empty = dao.findByName("");
-        assertThat(empty).isEqualTo(articleList);
+        assertThat(empty).containsAll(articleList);
     }
 
     @Test

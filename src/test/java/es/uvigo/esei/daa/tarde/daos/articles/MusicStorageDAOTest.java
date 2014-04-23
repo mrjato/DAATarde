@@ -132,7 +132,7 @@ public class MusicStorageDAOTest extends BaseDAOTest {
     @Test
     public void music_storage_dao_should_return_all_music_storages_when_searching_with_empty_title( ) {
         final List<MusicStorage> empty = dao.findByName("");
-        assertThat(empty).isEqualTo(musicList);
+        assertThat(empty).containsAll(musicList);
     }
 
     @Test

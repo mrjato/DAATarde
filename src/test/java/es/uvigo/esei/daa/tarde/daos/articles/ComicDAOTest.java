@@ -112,7 +112,7 @@ public class ComicDAOTest extends BaseDAOTest {
     @Test
     public void comic_dao_should_return_all_comic_when_searching_with_empty_title( ) {
         final List<Comic> empty = dao.findByName("");
-        assertThat(empty).isEqualTo(comicList);
+        assertThat(empty).containsAll(comicList);
     }
 
     @Test

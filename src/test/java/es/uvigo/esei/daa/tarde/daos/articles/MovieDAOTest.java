@@ -139,7 +139,7 @@ public class MovieDAOTest extends BaseDAOTest {
     @Test
     public void movie_dao_should_return_all_movies_when_searching_with_empty_title( ) {
         final List<Movie> empty = dao.findByName("");
-        assertThat(empty).isEqualTo(movieList);
+        assertThat(empty).containsAll(movieList);
     }
 
     @Test
