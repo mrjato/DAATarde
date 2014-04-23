@@ -12,6 +12,19 @@ import es.uvigo.esei.daa.tarde.entities.articles.Article;
 
 public abstract class GenericArticleDAO<T extends Article> extends GenericDAO<T> {
 
+    public long countByName(final String name) {
+        try (final DatabaseSession session = withoutTransaction()) {
+            return session.manager.createQuery(
+                "SELECT COUNT(a.id) FROM " + getEntityName() + " a "
+                    + "WHERE UPPER(a.name) LIKE :name "
+                    + "AND a.isVerified = true",
+                Long.class
+            ).setParameter(
+                "name", "%" + name.toUpperCase() + "%"
+            ).getSingleResult();
+        }
+    }
+
     public List<T> findByName(final String name) {
         try (final DatabaseSession session = withoutTransaction()) {
             return session.manager.createQuery(

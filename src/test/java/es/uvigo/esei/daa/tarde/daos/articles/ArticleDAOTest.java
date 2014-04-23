@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -147,6 +148,26 @@ public class ArticleDAOTest extends BaseDAOTest {
     public void article_dao_can_find_ten_latest_articles( ) {
         final List<Article> found = dao.findLatest();
         assertThat(found.size()).isEqualTo(5);
+    }
+
+    @Test
+    public void article_dao_can_count_results_when_searching_with_empty_name( ) {
+        assertThat(dao.countByName("")).isEqualTo(articleList.size());
+    }
+
+    @Test
+    public void article_dao_can_count_results_when_searching_with_a_name( ) {
+        for (final Article article : articleList) {
+            final String word  = article.getName().split("\\s+")[0];
+
+            long counter = 0;
+            for (final Article a : articleList) {
+                if (StringUtils.containsIgnoreCase(a.getName(), word))
+                    counter++;
+            }
+
+            assertThat(dao.countByName(word)).isEqualTo(counter);
+        }
     }
 
 }

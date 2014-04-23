@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -184,4 +185,25 @@ public class MovieDAOTest extends BaseDAOTest {
         thrown.expect(PersistenceException.class);
         dao.insert(movieList.get(0));
     }
+
+    @Test
+    public void movie_dao_can_count_results_when_searching_with_empty_name( ) {
+        assertThat(dao.countByName("")).isEqualTo(movieList.size());
+    }
+
+    @Test
+    public void movie_dao_can_count_results_when_searching_with_a_name( ) {
+        for (final Movie movie : movieList) {
+            final String word  = movie.getName().split("\\s+")[0];
+
+            long counter = 0;
+            for (final Movie m : movieList) {
+                if (StringUtils.containsIgnoreCase(m.getName(), word))
+                    counter++;
+            }
+
+            assertThat(dao.countByName(word)).isEqualTo(counter);
+        }
+    }
+
 }

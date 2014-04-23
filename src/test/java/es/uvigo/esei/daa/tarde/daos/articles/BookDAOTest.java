@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -169,4 +170,25 @@ public class BookDAOTest extends BaseDAOTest {
         thrown.expect(PersistenceException.class);
         dao.insert(bookList.get(0));
     }
+
+    @Test
+    public void book_dao_can_count_results_when_searching_with_empty_name( ) {
+        assertThat(dao.countByName("")).isEqualTo(bookList.size());
+    }
+
+    @Test
+    public void book_dao_can_count_results_when_searching_with_a_name( ) {
+        for (final Book book : bookList) {
+            final String word  = book.getName().split("\\s+")[0];
+
+            long counter = 0;
+            for (final Book b : bookList) {
+                if (StringUtils.containsIgnoreCase(b.getName(), word))
+                    counter++;
+            }
+
+            assertThat(dao.countByName(word)).isEqualTo(counter);
+        }
+    }
+
 }
