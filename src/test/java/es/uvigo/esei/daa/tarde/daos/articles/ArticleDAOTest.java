@@ -33,14 +33,7 @@ public class ArticleDAOTest extends BaseDAOTest {
                 new Movie("Kowokashi udekashi tsukamatsuru", new LocalDate(1972,  4,  1)),
                 new Movie("Sanzu no kawa no ubaguruma",      new LocalDate(1972,  6,  1)),
                 new Movie("Shogun Assassin",                 new LocalDate(1980, 11, 11)),
-                new MusicStorage("Liquid Swords",            new LocalDate(1995, 11,  7)),
-                new Movie("A",                               new LocalDate(1000, 10, 10)),
-                new Movie("B",                               new LocalDate(1000, 10, 10)),
-                new Movie("C",                               new LocalDate(1000, 10, 10)),
-                new Movie("D",                               new LocalDate(1000, 10, 10)),
-                new Movie("E",                               new LocalDate(1000, 10, 10)),
-                new Movie("F",                               new LocalDate(1000, 10, 10)),
-                new Movie("G",                               new LocalDate(1000, 10, 10)),
+                new MusicStorage("Liquid Swords",            new LocalDate(1995, 11,  7))
             }}
         });
     }
@@ -149,13 +142,12 @@ public class ArticleDAOTest extends BaseDAOTest {
 
         dao.update(articleList.get(0));
     }
-    
+
     @Test
     public void article_dao_can_find_ten_latest_articles( ) {
-        final List<Article> found = dao.findTenLatest();
-        assertThat(found.size()).isEqualTo(10);
-        assertThat(found).doesNotContain(articleList.get(0));
-        assertThat(found).doesNotContain(articleList.get(1));
+        final List<Article> found = dao.findLatest(3);
+        assertThat(found.size()).isEqualTo(3);
+        assertThat(found).doesNotContain(articleList.get(0), articleList.get(1));
     }
 
 }

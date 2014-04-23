@@ -25,14 +25,14 @@ public abstract class GenericArticleDAO<T extends Article> extends GenericDAO<T>
         }
     }
 
-    public List<Article> findTenLatest( ) {
+    public List<Article> findLatest(int num) {
         try (final DatabaseSession session = withoutTransaction()) {
             return session.manager.createQuery(
                 "SELECT a FROM Article a "
                     + "WHERE a.isVerified = true "
                     + "ORDER BY a.id DESC",
                 Article.class
-            ).setMaxResults(10).getResultList();
+            ).setMaxResults(num).getResultList();
         }
     }
 

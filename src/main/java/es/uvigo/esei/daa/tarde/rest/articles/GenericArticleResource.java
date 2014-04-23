@@ -33,6 +33,17 @@ public abstract class GenericArticleResource<T extends Article> {
         }
     }
 
+    @GET
+    public Response findTenLatest(@QueryParam("latest") final int num) {
+        try {
+            return Response.ok().entity(new GenericEntity<List<Article>>(
+                (List<Article>) dao.findLatest(num)
+            ) { }).build();
+        } catch (final Exception _) {
+            return Response.serverError().build();
+        }
+    }
+
     @POST
     public Response insert(final T article) {
         if (article.getId() != null)

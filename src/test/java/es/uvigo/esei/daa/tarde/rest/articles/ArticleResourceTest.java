@@ -114,4 +114,18 @@ public class ArticleResourceTest extends ArticleBaseResourceTest<Article, Articl
         }
     }
 
+    @Test
+    public void article_resource_can_find_latest_articles( ) {
+        when(mockedDAO.findLatest(10)).thenReturn(articleList);
+
+        final Response response = jerseyTest.target("articles").queryParam(
+            "latest", ""
+        ).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(OK_CODE);
+        assertThat(response.readEntity(
+            new GenericType<List<Article>>() { }
+        )).doesNotContain(articleList.get(0), articleList.get(1));
+    }
+
 }
