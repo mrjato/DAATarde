@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import es.uvigo.esei.daa.tarde.Config;
 import es.uvigo.esei.daa.tarde.daos.articles.MusicStorageDAO;
 import es.uvigo.esei.daa.tarde.entities.articles.MusicStorage;
 
@@ -59,7 +60,9 @@ public class MusicStorageResourceTest extends ArticleBaseResourceTest<MusicStora
 
     @Test
     public void music_storage_resource_is_able_to_search_by_name( ) {
-        when(mockedDAO.findByName(musicListName)).thenReturn(musicList);
+        when(mockedDAO.findByName(
+            musicListName, 1, Config.getInteger("articles_per_page")
+        )).thenReturn(musicList);
 
         final Response response = jerseyTest.target("articles/music").queryParam(
             "search", musicListName
@@ -73,7 +76,9 @@ public class MusicStorageResourceTest extends ArticleBaseResourceTest<MusicStora
 
     @Test
     public void music_storage_resource_returns_all_music_storages_when_searching_with_empty_name( ) {
-        when(mockedDAO.findByName("")).thenReturn(musicList);
+        when(mockedDAO.findByName(
+            "", 1, Config.getInteger("articles_per_page")
+        )).thenReturn(musicList);
 
         final Response response = jerseyTest.target("articles/music").queryParam(
             "search", ""
@@ -87,7 +92,9 @@ public class MusicStorageResourceTest extends ArticleBaseResourceTest<MusicStora
 
     @Test
     public void music_storage_resource_returns_a_server_error_code_when_dao_throws_exception_while_searching_by_name( ) {
-        when(mockedDAO.findByName(musicListName)).thenThrow(new PersistenceException());
+        when(mockedDAO.findByName(
+            musicListName, 1, Config.getInteger("articles_per_page")
+        )).thenThrow(new PersistenceException());
 
         final Response response = jerseyTest.target("articles/music").queryParam(
             "search", musicListName
@@ -126,6 +133,47 @@ public class MusicStorageResourceTest extends ArticleBaseResourceTest<MusicStora
             ));
 
             assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
+        }
+    }
+
+    @Test
+    public void music_storage_resource_can_find_latest_music_storages( ) {
+        when(mockedDAO.findLatest(ARTICLES_HOME_PAGE)).thenReturn(musicList);
+
+        final Response response = jerseyTest.target(
+            "articles/music/latest"
+        ).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(OK_CODE);
+        assertThat(response.readEntity(
+            new GenericType<List<MusicStorage>>() { }
+        )).containsExactlyElementsOf(musicList);
+    }
+
+    @Test
+    public void book_resource_can_paginate_results( ) {
+        final int numPages = musicList.size() / ARTICLES_PER_PAGE;
+
+        for (int page = 1; page < numPages; ++page) {
+            final int first = (page - 1) * ARTICLES_PER_PAGE;
+            final int last  = first + ARTICLES_PER_PAGE;
+
+            when(mockedDAO.findByName(
+                musicListName, page, ARTICLES_PER_PAGE
+            )).thenReturn(musicList.subList(first, last));
+
+            final Response response = jerseyTest.target(
+                "articles/music"
+            ).queryParam(
+                "search", musicListName
+            ).queryParam("page", page).request().get();
+
+            assertThat(response.getStatus()).isEqualTo(OK_CODE);
+            assertThat(response.readEntity(
+                new GenericType<List<MusicStorage>>() { }
+            )).hasSize(ARTICLES_PER_PAGE).containsExactlyElementsOf(
+                musicList.subList(first, last)
+            );
         }
     }
 

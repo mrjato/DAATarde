@@ -2,6 +2,7 @@ package es.uvigo.esei.daa.tarde.daos.articles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -78,7 +79,9 @@ public class ArticleDAOTest extends BaseDAOTest {
     @Test
     public void article_dao_can_find_articles_by_exact_title( ) {
         for (final Article article : articleList) {
-            final List<Article> found = dao.findByName(article.getName());
+            final List<Article> found = dao.findByName(
+                article.getName(), 1, articleList.size()
+            );
             assertThat(found).contains(article);
         }
     }
@@ -87,7 +90,9 @@ public class ArticleDAOTest extends BaseDAOTest {
     public void article_dao_can_find_articles_by_approximate_title( ) {
         for (final Article article : articleList) {
             final String word = article.getName().split("\\s+")[0];
-            final List<Article> found = dao.findByName(word);
+            final List<Article> found = dao.findByName(
+                word, 1, articleList.size()
+            );
             assertThat(found).contains(article);
         }
     }
@@ -97,20 +102,26 @@ public class ArticleDAOTest extends BaseDAOTest {
         for (final Article article : articleList) {
             final String word = article.getName().split("\\s+")[0];
 
-            final List<Article> upper = dao.findByName(word.toUpperCase());
+            final List<Article> upper = dao.findByName(
+                word.toUpperCase(), 1, articleList.size()
+            );
             assertThat(upper).contains(article);
 
-            final List<Article> lower = dao.findByName(word.toLowerCase());
+            final List<Article> lower = dao.findByName(
+                word.toLowerCase(), 1, articleList.size()
+            );
             assertThat(lower).contains(article);
 
-            final List<Article> rand = dao.findByName(TestUtils.randomizeCase(word));
+            final List<Article> rand = dao.findByName(
+                TestUtils.randomizeCase(word), 1, articleList.size()
+            );
             assertThat(rand).contains(article);
         }
     }
 
     @Test
     public void article_dao_should_return_all_articles_when_searching_with_empty_title( ) {
-        final List<Article> empty = dao.findByName("");
+        final List<Article> empty = dao.findByName("", 1, articleList.size());
         assertThat(empty).containsAll(articleList);
     }
 
@@ -119,7 +130,9 @@ public class ArticleDAOTest extends BaseDAOTest {
         for (final Article article : articleList) {
             unverifyArticle(article);
 
-            final List<Article> found = dao.findByName(article.getName());
+            final List<Article> found = dao.findByName(
+                article.getName(), 1, articleList.size()
+            );
             assertThat(found).doesNotContain(article);
         }
     }
@@ -145,9 +158,8 @@ public class ArticleDAOTest extends BaseDAOTest {
     }
 
     @Test
-    public void article_dao_can_find_ten_latest_articles( ) {
-        final List<Article> found = dao.findLatest();
-        assertThat(found.size()).isEqualTo(5);
+    public void article_dao_can_find_latest_articles( ) {
+        assertThat(dao.findLatest(articleList.size())).containsAll(articleList);
     }
 
     @Test
@@ -160,7 +172,7 @@ public class ArticleDAOTest extends BaseDAOTest {
         for (final Article article : articleList) {
             final String word  = article.getName().split("\\s+")[0];
 
-            long counter = 0;
+            int counter = 0;
             for (final Article a : articleList) {
                 if (StringUtils.containsIgnoreCase(a.getName(), word))
                     counter++;
@@ -168,6 +180,18 @@ public class ArticleDAOTest extends BaseDAOTest {
 
             assertThat(dao.countByName(word)).isEqualTo(counter);
         }
+    }
+
+    @Test
+    public void article_dao_can_paginate_results_when_searching_by_name( ) {
+        final List<Article> foundArticles = new ArrayList<>();
+
+        for (int page = 1; page <= articleList.size(); ++page) {
+            foundArticles.addAll(dao.findByName("", page, 1));
+        }
+
+        assertThat(foundArticles).hasSameSizeAs(articleList);
+        assertThat(foundArticles).containsAll(articleList);
     }
 
 }

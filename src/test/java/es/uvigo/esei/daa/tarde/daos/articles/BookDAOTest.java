@@ -2,6 +2,7 @@ package es.uvigo.esei.daa.tarde.daos.articles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -92,7 +93,9 @@ public class BookDAOTest extends BaseDAOTest {
     @Test
     public void book_dao_can_find_books_by_exact_title( ) {
         for (final Book book : bookList) {
-            final List<Book> found = dao.findByName(book.getName());
+            final List<Book> found = dao.findByName(
+                book.getName(), 1, bookList.size()
+            );
             assertThat(found).contains(book);
         }
     }
@@ -101,7 +104,7 @@ public class BookDAOTest extends BaseDAOTest {
     public void book_dao_can_find_books_by_approximate_title( ) {
         for (final Book book : bookList) {
             final String word = book.getName().split("\\s+")[0];
-            final List<Book> found = dao.findByName(word);
+            final List<Book> found = dao.findByName(word, 1, bookList.size());
             assertThat(found).contains(book);
         }
     }
@@ -111,20 +114,26 @@ public class BookDAOTest extends BaseDAOTest {
         for (final Book book : bookList) {
             final String word = book.getName().split("\\s+")[0];
 
-            final List<Book> upper = dao.findByName(word.toUpperCase());
+            final List<Book> upper = dao.findByName(
+                word.toUpperCase(), 1, bookList.size()
+            );
             assertThat(upper).contains(book);
 
-            final List<Book> lower = dao.findByName(word.toLowerCase());
+            final List<Book> lower = dao.findByName(
+                word.toLowerCase(), 1, bookList.size()
+            );
             assertThat(lower).contains(book);
 
-            final List<Book> rand  = dao.findByName(TestUtils.randomizeCase(word));
+            final List<Book> rand  = dao.findByName(
+                TestUtils.randomizeCase(word), 1, bookList.size()
+            );
             assertThat(rand).contains(book);
         }
     }
 
     @Test
     public void book_dao_should_return_all_books_when_searching_with_empty_title( ) {
-        final List<Book> empty = dao.findByName("");
+        final List<Book> empty = dao.findByName("", 1, bookList.size());
         assertThat(empty).containsAll(bookList);
     }
 
@@ -133,7 +142,9 @@ public class BookDAOTest extends BaseDAOTest {
         for (final Book book : bookList) {
             unverifyBook(book);
 
-            final List<Book> found = dao.findByName(book.getName());
+            final List<Book> found = dao.findByName(
+                book.getName(), 1, bookList.size()
+            );
             assertThat(found).doesNotContain(book);
         }
     }
@@ -172,6 +183,11 @@ public class BookDAOTest extends BaseDAOTest {
     }
 
     @Test
+    public void book_dao_can_find_latest_books( ) {
+        assertThat(dao.findLatest(bookList.size())).containsAll(bookList);
+    }
+
+    @Test
     public void book_dao_can_count_results_when_searching_with_empty_name( ) {
         assertThat(dao.countByName("")).isEqualTo(bookList.size());
     }
@@ -189,6 +205,18 @@ public class BookDAOTest extends BaseDAOTest {
 
             assertThat(dao.countByName(word)).isEqualTo(counter);
         }
+    }
+
+    @Test
+    public void book_dao_can_paginate_results_when_searching_by_name( ) {
+        final List<Book> foundBooks = new ArrayList<>();
+
+        for (int page = 1; page <= bookList.size(); ++page) {
+            foundBooks.addAll(dao.findByName("", page, 1));
+        }
+
+        assertThat(foundBooks).hasSameSizeAs(bookList);
+        assertThat(foundBooks).containsAll(bookList);
     }
 
 }

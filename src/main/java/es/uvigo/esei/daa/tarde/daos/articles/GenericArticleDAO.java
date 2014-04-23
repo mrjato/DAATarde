@@ -5,7 +5,8 @@ import static es.uvigo.esei.daa.tarde.daos.DatabaseSession.withoutTransaction;
 
 import java.util.List;
 
-import es.uvigo.esei.daa.tarde.Config;
+import javax.persistence.TypedQuery;
+
 import es.uvigo.esei.daa.tarde.daos.DatabaseSession;
 import es.uvigo.esei.daa.tarde.daos.GenericDAO;
 import es.uvigo.esei.daa.tarde.entities.articles.Article;
@@ -25,28 +26,33 @@ public abstract class GenericArticleDAO<T extends Article> extends GenericDAO<T>
         }
     }
 
-    public List<T> findByName(final String name) {
+    public List<T> findByName(
+        final String name, int pageNumber, int articlesPerPage
+    ) {
         try (final DatabaseSession session = withoutTransaction()) {
-            return session.manager.createQuery(
+            final TypedQuery<T> query = session.manager.createQuery(
                 "SELECT a FROM " + getEntityName() + " a "
                     + "WHERE UPPER(a.name) LIKE :name "
                     + "AND a.isVerified = true "
                     + "ORDER BY a.name ASC",
                 getGenericClass()
-            ).setParameter(
-                "name", "%" + name.toUpperCase() + "%"
-            ).getResultList();
+            );
+
+            return query.setParameter("name", "%" + name.toUpperCase() + "%")
+                        .setMaxResults(articlesPerPage)
+                        .setFirstResult((pageNumber - 1) * articlesPerPage)
+                        .getResultList();
         }
     }
 
-    public List<Article> findLatest() {
+    public List<T> findLatest(final int articlesCount) {
         try (final DatabaseSession session = withoutTransaction()) {
             return session.manager.createQuery(
-                "SELECT a FROM Article a "
+                "SELECT a FROM " + getEntityName() + " a "
                     + "WHERE a.isVerified = true "
                     + "ORDER BY a.id DESC",
-                Article.class
-            ).setMaxResults(Config.getInteger("articles_home_page")).getResultList();
+                getGenericClass()
+            ).setMaxResults(articlesCount).getResultList();
         }
     }
 

@@ -3,6 +3,7 @@ package es.uvigo.esei.daa.tarde.rest.articles;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,6 +12,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import es.uvigo.esei.daa.tarde.Config;
 import es.uvigo.esei.daa.tarde.daos.articles.GenericArticleDAO;
 import es.uvigo.esei.daa.tarde.entities.articles.Article;
 
@@ -24,10 +26,15 @@ public abstract class GenericArticleResource<T extends Article> {
 
     @GET
     @SuppressWarnings("unchecked")
-    public Response search(@QueryParam("search") final String name) {
+    public Response search(
+        @QueryParam("search") final String name,
+        @QueryParam("page") @DefaultValue("1") final int pageNumber
+    ) {
         try {
             return Response.ok().entity(new GenericEntity<List<Article>>(
-                (List<Article>) dao.findByName(name)
+                (List<Article>) dao.findByName(
+                    name, pageNumber, Config.getInteger("articles_per_page")
+                )
             ) { }).build();
         } catch (final Exception _) {
             return Response.serverError().build();
@@ -36,10 +43,12 @@ public abstract class GenericArticleResource<T extends Article> {
 
     @GET
     @Path("latest")
-    public Response findTenLatest() {
+    public Response findLatest() {
         try {
             return Response.ok().entity(new GenericEntity<List<Article>>(
-                (List<Article>) dao.findLatest()
+                (List<Article>) dao.findLatest(
+                    Config.getInteger("articles_home_page")
+                )
             ) { }).build();
         } catch (final Exception _) {
             return Response.serverError().build();

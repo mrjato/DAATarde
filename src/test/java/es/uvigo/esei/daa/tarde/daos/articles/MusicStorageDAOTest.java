@@ -2,6 +2,7 @@ package es.uvigo.esei.daa.tarde.daos.articles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -100,7 +101,9 @@ public class MusicStorageDAOTest extends BaseDAOTest {
     @Test
     public void music_storage_dao_can_find_music_storages_by_exact_title( ) {
         for (final MusicStorage music : musicList) {
-            final List<MusicStorage> found = dao.findByName(music.getName());
+            final List<MusicStorage> found = dao.findByName(
+                music.getName(), 1, musicList.size()
+            );
             assertThat(found).contains(music);
         }
     }
@@ -109,7 +112,9 @@ public class MusicStorageDAOTest extends BaseDAOTest {
     public void music_storage_dao_can_find_music_storages_by_approximate_title( ) {
         for (final MusicStorage music : musicList) {
             final String word = music.getName().split("\\s+")[0];
-            final List<MusicStorage> found = dao.findByName(word);
+            final List<MusicStorage> found = dao.findByName(
+                word, 1, musicList.size()
+            );
             assertThat(found).contains(music);
         }
     }
@@ -119,20 +124,28 @@ public class MusicStorageDAOTest extends BaseDAOTest {
         for (final MusicStorage music : musicList) {
             final String word = music.getName().split("\\s+")[0];
 
-            final List<MusicStorage> upper = dao.findByName(word.toUpperCase());
+            final List<MusicStorage> upper = dao.findByName(
+                word.toUpperCase(), 1, musicList.size()
+            );
             assertThat(upper).contains(music);
 
-            final List<MusicStorage> lower = dao.findByName(word.toLowerCase());
+            final List<MusicStorage> lower = dao.findByName(
+                word.toLowerCase(), 1, musicList.size()
+            );
             assertThat(lower).contains(music);
 
-            final List<MusicStorage> rand  = dao.findByName(TestUtils.randomizeCase(word));
+            final List<MusicStorage> rand  = dao.findByName(
+                TestUtils.randomizeCase(word), 1, musicList.size()
+            );
             assertThat(rand).contains(music);
         }
     }
 
     @Test
     public void music_storage_dao_should_return_all_music_storages_when_searching_with_empty_title( ) {
-        final List<MusicStorage> empty = dao.findByName("");
+        final List<MusicStorage> empty = dao.findByName(
+            "", 1, musicList.size()
+        );
         assertThat(empty).containsAll(musicList);
     }
 
@@ -141,7 +154,9 @@ public class MusicStorageDAOTest extends BaseDAOTest {
         for (final MusicStorage music : musicList) {
             unverifyMusic(music);
 
-            final List<MusicStorage> found = dao.findByName(music.getName());
+            final List<MusicStorage> found = dao.findByName(
+                music.getName(), 1, musicList.size()
+            );
             assertThat(found).doesNotContain(music);
         }
     }
@@ -188,6 +203,11 @@ public class MusicStorageDAOTest extends BaseDAOTest {
     }
 
     @Test
+    public void music_storage_dao_can_find_latest_music_storages( ) {
+        assertThat(dao.findLatest(musicList.size())).containsAll(musicList);
+    }
+
+    @Test
     public void music_storage_dao_can_count_results_when_searching_with_empty_name( ) {
         assertThat(dao.countByName("")).isEqualTo(musicList.size());
     }
@@ -205,6 +225,18 @@ public class MusicStorageDAOTest extends BaseDAOTest {
 
             assertThat(dao.countByName(word)).isEqualTo(counter);
         }
+    }
+
+    @Test
+    public void music_storage_dao_can_paginate_results_when_searching_by_name( ) {
+        final List<MusicStorage> foundMusic = new ArrayList<>();
+
+        for (int page = 1; page <= musicList.size(); ++page) {
+            foundMusic.addAll(dao.findByName("", page, 1));
+        }
+
+        assertThat(foundMusic).hasSameSizeAs(musicList);
+        assertThat(foundMusic).containsAll(musicList);
     }
 
 }

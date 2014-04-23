@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import es.uvigo.esei.daa.tarde.Config;
 import es.uvigo.esei.daa.tarde.daos.articles.MovieDAO;
 import es.uvigo.esei.daa.tarde.entities.articles.Movie;
 
@@ -57,7 +58,9 @@ public class MovieResourceTest extends ArticleBaseResourceTest<Movie, MovieDAO> 
 
     @Test
     public void movie_resource_is_able_to_search_by_name( ) {
-        when(mockedDAO.findByName(movieListName)).thenReturn(movieList);
+        when(mockedDAO.findByName(
+            movieListName, 1, Config.getInteger("articles_per_page")
+        )).thenReturn(movieList);
 
         final Response response = jerseyTest.target("articles/movies").queryParam(
             "search", movieListName
@@ -71,7 +74,9 @@ public class MovieResourceTest extends ArticleBaseResourceTest<Movie, MovieDAO> 
 
     @Test
     public void movie_resource_returns_all_movies_when_searching_with_empty_name( ) {
-        when(mockedDAO.findByName("")).thenReturn(movieList);
+        when(mockedDAO.findByName(
+            "", 1, Config.getInteger("articles_per_page")
+        )).thenReturn(movieList);
 
         final Response response = jerseyTest.target("articles/movies").queryParam(
             "search", ""
@@ -85,7 +90,9 @@ public class MovieResourceTest extends ArticleBaseResourceTest<Movie, MovieDAO> 
 
     @Test
     public void movie_resource_returns_a_server_error_code_when_dao_throws_exception_while_searching_by_name( ) {
-        when(mockedDAO.findByName(movieListName)).thenThrow(new PersistenceException());
+        when(mockedDAO.findByName(
+            movieListName, 1, Config.getInteger("articles_per_page")
+        )).thenThrow(new PersistenceException());
 
         final Response response = jerseyTest.target("articles/movies").queryParam(
             "search", movieListName
@@ -124,6 +131,47 @@ public class MovieResourceTest extends ArticleBaseResourceTest<Movie, MovieDAO> 
             ));
 
             assertThat(response.getStatus()).isEqualTo(SERVER_ERROR_CODE);
+        }
+    }
+
+    @Test
+    public void movie_resource_can_find_latest_movies( ) {
+        when(mockedDAO.findLatest(ARTICLES_HOME_PAGE)).thenReturn(movieList);
+
+        final Response response = jerseyTest.target(
+            "articles/movies/latest"
+        ).request().get();
+
+        assertThat(response.getStatus()).isEqualTo(OK_CODE);
+        assertThat(response.readEntity(
+            new GenericType<List<Movie>>() { }
+        )).containsExactlyElementsOf(movieList);
+    }
+
+    @Test
+    public void movie_resource_can_paginate_results( ) {
+        final int numPages = movieList.size() / ARTICLES_PER_PAGE;
+
+        for (int page = 1; page < numPages; ++page) {
+            final int first = (page - 1) * ARTICLES_PER_PAGE;
+            final int last  = first + ARTICLES_PER_PAGE;
+
+            when(mockedDAO.findByName(
+                movieListName, page, ARTICLES_PER_PAGE
+            )).thenReturn(movieList.subList(first, last));
+
+            final Response response = jerseyTest.target(
+                "articles/books"
+            ).queryParam(
+                "search", movieListName
+            ).queryParam("page", page).request().get();
+
+            assertThat(response.getStatus()).isEqualTo(OK_CODE);
+            assertThat(response.readEntity(
+                new GenericType<List<Movie>>() { }
+            )).hasSize(ARTICLES_PER_PAGE).containsExactlyElementsOf(
+                movieList.subList(first, last)
+            );
         }
     }
 

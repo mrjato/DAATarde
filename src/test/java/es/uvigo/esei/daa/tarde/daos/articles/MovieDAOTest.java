@@ -2,6 +2,7 @@ package es.uvigo.esei.daa.tarde.daos.articles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -107,7 +108,9 @@ public class MovieDAOTest extends BaseDAOTest {
     @Test
     public void movie_dao_can_find_movies_by_exact_title( ) {
         for (final Movie movie : movieList) {
-            final List<Movie> found = dao.findByName(movie.getName());
+            final List<Movie> found = dao.findByName(
+                movie.getName(), 1, movieList.size()
+            );
             assertThat(found).contains(movie);
         }
     }
@@ -116,7 +119,9 @@ public class MovieDAOTest extends BaseDAOTest {
     public void movie_dao_can_find_movies_by_approximate_title( ) {
         for (final Movie movie : movieList) {
             final String word = movie.getName().split("\\s+")[0];
-            final List<Movie> found = dao.findByName(word);
+            final List<Movie> found = dao.findByName(
+                word, 1, movieList.size()
+            );
             assertThat(found).contains(movie);
         }
     }
@@ -126,20 +131,26 @@ public class MovieDAOTest extends BaseDAOTest {
         for (final Movie movie : movieList) {
             final String word = movie.getName().split("\\s+")[0];
 
-            final List<Movie> upper = dao.findByName(word.toUpperCase());
+            final List<Movie> upper = dao.findByName(
+                word.toUpperCase(), 1, movieList.size()
+            );
             assertThat(upper).contains(movie);
 
-            final List<Movie> lower = dao.findByName(word.toLowerCase());
+            final List<Movie> lower = dao.findByName(
+                word.toLowerCase(), 1, movieList.size()
+            );
             assertThat(lower).contains(movie);
 
-            final List<Movie> rand  = dao.findByName(TestUtils.randomizeCase(word));
+            final List<Movie> rand  = dao.findByName(
+                TestUtils.randomizeCase(word), 1, movieList.size()
+            );
             assertThat(rand).contains(movie);
         }
     }
 
     @Test
     public void movie_dao_should_return_all_movies_when_searching_with_empty_title( ) {
-        final List<Movie> empty = dao.findByName("");
+        final List<Movie> empty = dao.findByName("", 1, movieList.size());
         assertThat(empty).containsAll(movieList);
     }
 
@@ -148,7 +159,9 @@ public class MovieDAOTest extends BaseDAOTest {
         for (final Movie movie : movieList) {
             unverifyMovie(movie);
 
-            final List<Movie> found = dao.findByName(movie.getName());
+            final List<Movie> found = dao.findByName(
+                movie.getName(), 1, movieList.size()
+            );
             assertThat(found).doesNotContain(movie);
         }
     }
@@ -187,6 +200,11 @@ public class MovieDAOTest extends BaseDAOTest {
     }
 
     @Test
+    public void movie_dao_can_find_latest_movies( ) {
+        assertThat(dao.findLatest(movieList.size())).containsAll(movieList);
+    }
+
+    @Test
     public void movie_dao_can_count_results_when_searching_with_empty_name( ) {
         assertThat(dao.countByName("")).isEqualTo(movieList.size());
     }
@@ -204,6 +222,18 @@ public class MovieDAOTest extends BaseDAOTest {
 
             assertThat(dao.countByName(word)).isEqualTo(counter);
         }
+    }
+
+    @Test
+    public void movie_dao_can_paginate_results_when_searching_by_name( ) {
+        final List<Movie> foundMovies = new ArrayList<>();
+
+        for (int page = 1; page <= movieList.size(); ++page) {
+            foundMovies.addAll(dao.findByName("", page, 1));
+        }
+
+        assertThat(foundMovies).hasSameSizeAs(movieList);
+        assertThat(foundMovies).containsAll(movieList);
     }
 
 }

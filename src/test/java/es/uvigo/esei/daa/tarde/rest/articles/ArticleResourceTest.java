@@ -3,7 +3,6 @@ package es.uvigo.esei.daa.tarde.rest.articles;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import es.uvigo.esei.daa.tarde.Config;
 import es.uvigo.esei.daa.tarde.daos.articles.ArticleDAO;
 import es.uvigo.esei.daa.tarde.entities.articles.Article;
 import es.uvigo.esei.daa.tarde.entities.articles.Book;
@@ -64,7 +64,9 @@ public class ArticleResourceTest extends ArticleBaseResourceTest<Article, Articl
 
     @Test
     public void article_resource_is_able_to_search_by_name( ) {
-        when(mockedDAO.findByName(articleListName)).thenReturn(articleList);
+        when(mockedDAO.findByName(
+            articleListName, 1, Config.getInteger("articles_per_page")
+        )).thenReturn(articleList);
 
         final Response response = jerseyTest.target("articles").queryParam(
             "search", articleListName
@@ -78,7 +80,9 @@ public class ArticleResourceTest extends ArticleBaseResourceTest<Article, Articl
 
     @Test
     public void article_resource_returns_all_articles_when_searching_with_empty_name( ) {
-        when(mockedDAO.findByName("")).thenReturn(articleList);
+        when(mockedDAO.findByName(
+            "", 1, Config.getInteger("articles_per_page")
+        )).thenReturn(articleList);
 
         final Response response = jerseyTest.target("articles").queryParam(
             "search", ""
@@ -92,7 +96,9 @@ public class ArticleResourceTest extends ArticleBaseResourceTest<Article, Articl
 
     @Test
     public void article_resource_returns_a_server_error_code_when_dao_throws_exception_while_searching_by_name( ) {
-        when(mockedDAO.findByName(articleListName)).thenThrow(new PersistenceException());
+        when(mockedDAO.findByName(
+            articleListName, 1, Config.getInteger("articles_per_page")
+        )).thenThrow(new PersistenceException());
 
         final Response response = jerseyTest.target("articles").queryParam(
             "search", articleListName
@@ -117,20 +123,41 @@ public class ArticleResourceTest extends ArticleBaseResourceTest<Article, Articl
 
     @Test
     public void article_resource_can_find_latest_articles( ) {
-        List<Article> found = new ArrayList<Article>(articleList);
-        found.remove(0);
-        found.remove(1);
-        found.remove(2);
-        found.remove(3);
-        found.remove(4);
-        
-        when(mockedDAO.findLatest()).thenReturn(found);
+        when(mockedDAO.findLatest(ARTICLES_HOME_PAGE)).thenReturn(articleList);
 
-        final Response response = jerseyTest.target("articles/latest").request().get();
+        final Response response = jerseyTest.target(
+            "articles/latest"
+        ).request().get();
 
         assertThat(response.getStatus()).isEqualTo(OK_CODE);
         assertThat(response.readEntity(
-            new GenericType<List<Article>>() { }).size()).isEqualTo(10);
+            new GenericType<List<Article>>() { }
+        )).containsExactlyElementsOf(articleList);
+    }
+
+    @Test
+    public void article_resource_can_paginate_results( ) {
+        final int numPages = articleList.size() / ARTICLES_PER_PAGE;
+
+        for (int page = 1; page < numPages; ++page) {
+            final int first = (page - 1) * ARTICLES_PER_PAGE;
+            final int last  = first + ARTICLES_PER_PAGE;
+
+            when(mockedDAO.findByName(
+                articleListName, page, ARTICLES_PER_PAGE
+            )).thenReturn(articleList.subList(first, last));
+
+            final Response response = jerseyTest.target("articles").queryParam(
+                "search", articleListName
+            ).queryParam("page", page).request().get();
+
+            assertThat(response.getStatus()).isEqualTo(OK_CODE);
+            assertThat(response.readEntity(
+                new GenericType<List<Article>>() { }
+            )).hasSize(ARTICLES_PER_PAGE).containsExactlyElementsOf(
+                articleList.subList(first, last)
+            );
+        }
     }
 
 }

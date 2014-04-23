@@ -2,6 +2,7 @@ package es.uvigo.esei.daa.tarde.daos.articles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -80,7 +81,9 @@ public class ComicDAOTest extends BaseDAOTest {
     @Test
     public void comic_dao_can_find_comics_by_exact_title( ) {
         for (final Comic comic : comicList) {
-            final List<Comic> found = dao.findByName(comic.getName());
+            final List<Comic> found = dao.findByName(
+                comic.getName(), 1, comicList.size()
+            );
             assertThat(found).contains(comic);
         }
     }
@@ -89,7 +92,9 @@ public class ComicDAOTest extends BaseDAOTest {
     public void comic_dao_can_find_comics_by_approximate_title( ) {
         for (final Comic comic : comicList) {
             final String word = comic.getName().split("\\s+")[0];
-            final List<Comic> found = dao.findByName(word);
+            final List<Comic> found = dao.findByName(
+                word, 1, comicList.size()
+            );
             assertThat(found).contains(comic);
         }
     }
@@ -99,20 +104,26 @@ public class ComicDAOTest extends BaseDAOTest {
         for (final Comic comic : comicList) {
             final String word = comic.getName().split("\\s+")[0];
 
-            final List<Comic> upper = dao.findByName(word.toUpperCase());
+            final List<Comic> upper = dao.findByName(
+                word.toUpperCase(), 1, comicList.size()
+            );
             assertThat(upper).contains(comic);
 
-            final List<Comic> lower = dao.findByName(word.toLowerCase());
+            final List<Comic> lower = dao.findByName(
+                word.toLowerCase(), 1, comicList.size()
+            );
             assertThat(lower).contains(comic);
 
-            final List<Comic> rand  = dao.findByName(TestUtils.randomizeCase(word));
+            final List<Comic> rand  = dao.findByName(
+                TestUtils.randomizeCase(word), 1, comicList.size()
+            );
             assertThat(rand).contains(comic);
         }
     }
 
     @Test
     public void comic_dao_should_return_all_comic_when_searching_with_empty_title( ) {
-        final List<Comic> empty = dao.findByName("");
+        final List<Comic> empty = dao.findByName("", 1, comicList.size());
         assertThat(empty).containsAll(comicList);
     }
 
@@ -121,7 +132,9 @@ public class ComicDAOTest extends BaseDAOTest {
         for (final Comic comic : comicList) {
             unverifyComic(comic);
 
-            final List<Comic> found = dao.findByName(comic.getName());
+            final List<Comic> found = dao.findByName(
+                comic.getName(), 1, comicList.size()
+            );
             assertThat(found).doesNotContain(comic);
         }
     }
@@ -160,6 +173,11 @@ public class ComicDAOTest extends BaseDAOTest {
     }
 
     @Test
+    public void comic_dao_can_find_latest_comics( ) {
+        assertThat(dao.findLatest(comicList.size())).containsAll(comicList);
+    }
+
+    @Test
     public void comic_dao_can_count_results_when_searching_with_empty_name( ) {
         assertThat(dao.countByName("")).isEqualTo(comicList.size());
     }
@@ -177,6 +195,18 @@ public class ComicDAOTest extends BaseDAOTest {
 
             assertThat(dao.countByName(word)).isEqualTo(counter);
         }
+    }
+
+    @Test
+    public void comic_dao_can_paginate_results_when_searching_by_name( ) {
+        final List<Comic> foundComics = new ArrayList<>();
+
+        for (int page = 1; page <= comicList.size(); ++page) {
+            foundComics.addAll(dao.findByName("", page, 1));
+        }
+
+        assertThat(foundComics).hasSameSizeAs(comicList);
+        assertThat(foundComics).containsAll(comicList);
     }
 
 }
