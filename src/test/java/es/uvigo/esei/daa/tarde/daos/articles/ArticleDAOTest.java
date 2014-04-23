@@ -145,9 +145,8 @@ public class ArticleDAOTest extends BaseDAOTest {
 
     @Test
     public void article_dao_can_find_ten_latest_articles( ) {
-        final List<Article> found = dao.findLatest(3);
-        assertThat(found.size()).isEqualTo(3);
-        assertThat(found).doesNotContain(articleList.get(0), articleList.get(1));
+        final List<Article> found = dao.findLatest();
+        assertThat(found.size()).isEqualTo(5);
     }
 
 }

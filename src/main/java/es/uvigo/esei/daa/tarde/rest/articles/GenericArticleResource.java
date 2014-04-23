@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
@@ -34,10 +35,11 @@ public abstract class GenericArticleResource<T extends Article> {
     }
 
     @GET
-    public Response findTenLatest(@QueryParam("latest") final int num) {
+    @Path("latest")
+    public Response findTenLatest() {
         try {
             return Response.ok().entity(new GenericEntity<List<Article>>(
-                (List<Article>) dao.findLatest(num)
+                (List<Article>) dao.findLatest()
             ) { }).build();
         } catch (final Exception _) {
             return Response.serverError().build();

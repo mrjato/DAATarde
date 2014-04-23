@@ -5,6 +5,7 @@ import static es.uvigo.esei.daa.tarde.daos.DatabaseSession.withoutTransaction;
 
 import java.util.List;
 
+import es.uvigo.esei.daa.tarde.Config;
 import es.uvigo.esei.daa.tarde.daos.DatabaseSession;
 import es.uvigo.esei.daa.tarde.daos.GenericDAO;
 import es.uvigo.esei.daa.tarde.entities.articles.Article;
@@ -25,14 +26,14 @@ public abstract class GenericArticleDAO<T extends Article> extends GenericDAO<T>
         }
     }
 
-    public List<Article> findLatest(int num) {
+    public List<Article> findLatest() {
         try (final DatabaseSession session = withoutTransaction()) {
             return session.manager.createQuery(
                 "SELECT a FROM Article a "
                     + "WHERE a.isVerified = true "
                     + "ORDER BY a.id DESC",
                 Article.class
-            ).setMaxResults(num).getResultList();
+            ).setMaxResults(Config.getInteger("articles_home_page")).getResultList();
         }
     }
 

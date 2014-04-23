@@ -3,6 +3,7 @@ package es.uvigo.esei.daa.tarde.rest.articles;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -116,16 +117,20 @@ public class ArticleResourceTest extends ArticleBaseResourceTest<Article, Articl
 
     @Test
     public void article_resource_can_find_latest_articles( ) {
-        when(mockedDAO.findLatest(10)).thenReturn(articleList);
+        List<Article> found = new ArrayList<Article>(articleList);
+        found.remove(0);
+        found.remove(1);
+        found.remove(2);
+        found.remove(3);
+        found.remove(4);
+        
+        when(mockedDAO.findLatest()).thenReturn(found);
 
-        final Response response = jerseyTest.target("articles").queryParam(
-            "latest", ""
-        ).request().get();
+        final Response response = jerseyTest.target("articles/latest").request().get();
 
         assertThat(response.getStatus()).isEqualTo(OK_CODE);
         assertThat(response.readEntity(
-            new GenericType<List<Article>>() { }
-        )).doesNotContain(articleList.get(0), articleList.get(1));
+            new GenericType<List<Article>>() { }).size()).isEqualTo(10);
     }
 
 }
