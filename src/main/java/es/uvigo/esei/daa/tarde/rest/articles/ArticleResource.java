@@ -25,7 +25,7 @@ public class ArticleResource  extends GenericArticleResource<Article> {
     ArticleResource(final ArticleDAO dao) {
         super(dao);
     }
-
+    
     @Override
     public final Response insert(final Article _) {
         return Response.status(Status.BAD_REQUEST).build();
