@@ -22,7 +22,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import es.uvigo.esei.daa.tarde.Config;
 import es.uvigo.esei.daa.tarde.daos.articles.MovieDAO;
 import es.uvigo.esei.daa.tarde.entities.articles.Movie;
 
@@ -59,7 +58,7 @@ public class MovieResourceTest extends ArticleBaseResourceTest<Movie, MovieDAO> 
     @Test
     public void movie_resource_is_able_to_search_by_name( ) {
         when(mockedDAO.findByName(
-            movieListName, 1, Config.getInteger("articles_per_page")
+            movieListName, 1, ARTICLES_PER_PAGE
         )).thenReturn(movieList);
 
         final Response response = jerseyTest.target("articles/movies").queryParam(
@@ -75,7 +74,7 @@ public class MovieResourceTest extends ArticleBaseResourceTest<Movie, MovieDAO> 
     @Test
     public void movie_resource_returns_all_movies_when_searching_with_empty_name( ) {
         when(mockedDAO.findByName(
-            "", 1, Config.getInteger("articles_per_page")
+            "", 1, ARTICLES_PER_PAGE
         )).thenReturn(movieList);
 
         final Response response = jerseyTest.target("articles/movies").queryParam(
@@ -91,7 +90,7 @@ public class MovieResourceTest extends ArticleBaseResourceTest<Movie, MovieDAO> 
     @Test
     public void movie_resource_returns_a_server_error_code_when_dao_throws_exception_while_searching_by_name( ) {
         when(mockedDAO.findByName(
-            movieListName, 1, Config.getInteger("articles_per_page")
+            movieListName, 1, ARTICLES_PER_PAGE
         )).thenThrow(new PersistenceException());
 
         final Response response = jerseyTest.target("articles/movies").queryParam(
