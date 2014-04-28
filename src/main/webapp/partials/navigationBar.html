@@ -22,9 +22,9 @@
 					<form class="nav navbar-form navbar-left" role="search"
 						ng-controller="SearchController">
 						<div class="input-group">
-							<input type="text" ng-keypress="enter($event)" class="form-control" placeholder="Búsqueda"
+							<input id="buscador" type="text" ng-keypress="enter($event)" class="form-control" placeholder="Búsqueda"
 								ng-model="terms">
-								<select class="form-control" ng-change=search(selectedCategory) ng-model="selectedCategory" ng-options="category.name for category in categories">
+								<select class="form-control" id="buscador" ng-change=search(selectedCategory) ng-model="selectedCategory" ng-options="category.name for category in categories">
 								</select>
 							
 						</div>

@@ -74,7 +74,8 @@ input[type=date] {
 /* Para addArticles */
 label {
     float: left;
-    width: 120px;
+    margin-top:5px;
+    /*width: 120px;*/
     font-weight: bold;
     color: #777;
 }
@@ -157,7 +158,12 @@ br {
 	text-align: right;
 }
 
-.form-control
+.form-control[id="buscador"]
 {
 	width:inherit !important;
+}
+
+.form-control[id="comboCat"]
+{
+	margin-bottom:15px !important;
 }
