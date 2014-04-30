@@ -18,13 +18,13 @@ define(['controllers/controllers'], function(controllers) {
                 { name: 'Música',    path: 'musicstorages' },
             ];
 
-            $scope.add = function( ) {
-                $resource('rest/' + $scope.category.path).save(
+            $scope.add = function(category) {
+                $resource('rest/' + category.path).save(
                     $scope.article
                 );
                 window.alert("Artículo " + $scope.article.name + " pendiente de moderación.");
                                 
-                $location.path("/" + $scope.category.path);
+                $location.path("/" + category.path);
             };
         }
     ];

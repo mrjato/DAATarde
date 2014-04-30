@@ -1,17 +1,16 @@
 <div id="globalAddArticles">
-    <form ng-switch on="selectedArticleType.path" novalidate method="post" name="form" class="form" ng-submit="add()">
+    <form ng-switch on="selectedArticleType.path" novalidate method="post" name="form" class="form" ng-submit="add(selectedArticleType.path)">
     
     	<label for="cat">Tipo de Articulo: </label><br />
     	<select id="comboCat" class="form-control" id="buscador" ng-model="selectedArticleType" ng-options="category.name for category in categories">
 		</select>
    	
    		<div ng-show="selectedArticleType")>
-   			
         <label for="name">Nombre: <span ng-show="form.name.$error.required">*</span></label><br />
         <input class="form-control" type="text" ng-model="article.name" name="name" placeholder="Nombre del artículo" required /><br />
 
         <label for="date">Fecha: <span ng-show="form.date.$error.required">*</span></label><br />
-        <input class="form-control" type="date" min="1" max="10" ng-model="article.date" name="date" required /><br />
+        <input class="form-control" type="date" min="1" max="10" ng-model="article.date" name="date" /><br />
 		<script>Modernizr.load({
 			test: Modernizr.inputtypes.date,
 			nope: [

@@ -8,7 +8,6 @@ define(['controllers/controllers'], function(controllers) {
             $scope.terms = '';
 
             $scope.categories = [
-                { name: 'Categoría', path: ''},
                 { name: 'Todo',    	 path: 'articles'  },
                 { name: 'Libros',    path: 'books'  },
                 { name: 'Cómics',    path: 'comics' },
@@ -18,17 +17,15 @@ define(['controllers/controllers'], function(controllers) {
             $scope.selectedCategory = $scope.categories[0];
             
             $scope.search = function(category) {
-                $location.path("/" + category.path + "/search/" + $scope.terms);
+                $location.path("/" + category.path + "?search=" + $scope.terms);
             };
 
             $scope.enter = function(ev) {
             	 if (ev.which==13){
-            		 if ($scope.selectedCategory.name != 'Categoría')
-            			 $location.path("/" + $scope.selectedCategory.path + "/search/" + $scope.terms);
-            		 else{
-            			 $location.path("/" + 'articles'+ "/search/" + $scope.terms);
-            		 	 $scope.selectedCategory = $scope.categories[1];
+            		 if ($scope.selectedCategory.name == 'Todo') {
+            			 $scope.selectedCategory = $scope.categories[0];
             		 }
+            	 $location.path("/" + $scope.selectedCategory.path + "?search=" + $scope.terms);
             	 }
             };
 
