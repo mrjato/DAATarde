@@ -19,15 +19,18 @@
 					<a class="navbar-brand">Tarde@DAA</a>
 				</div>
 				<div class="col-md-4">
-					<form class="nav navbar-form navbar-left" role="search"
+					<form class="nav navbar-form-group navbar-left" role="search"
 						ng-controller="SearchController">
 						<div class="input-group">
 							<input id="buscador" type="text" ng-keypress="enter($event)" class="form-control" placeholder="Búsqueda"
 								ng-model="terms">
 								<select class="form-control" id="buscador" ng-change=search(selectedCategory) ng-model="selectedCategory" ng-options="category.name for category in categories">
 								</select>
-							
 						</div>
+						
+								
+						
+						
 					</form>
 				</div>
 				<div class="col-md-4">

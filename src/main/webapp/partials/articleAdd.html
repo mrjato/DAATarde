@@ -1,8 +1,8 @@
-<div id="globalAddArticles">
-    <form ng-switch on="selectedArticleType.path" novalidate method="post" name="form" class="form" ng-submit="add(selectedArticleType.path)">
+<div  id="globalAddArticles">
+    <form ng-switch on="selectedArticleType.path" novalidate method="post" name="form" class="form" ng-submit="add(selectedArticleType)">
     
     	<label for="cat">Tipo de Articulo: </label><br />
-    	<select id="comboCat" class="form-control" id="buscador" ng-model="selectedArticleType" ng-options="category.name for category in categories">
+    	<select   id="buscador" id="comboCat" class="form-control"  ng-model="selectedArticleType" ng-options="category.name for category in categories">
 		</select>
    	
    		<div ng-show="selectedArticleType")>
@@ -11,25 +11,7 @@
 
         <label for="date">Fecha: <span ng-show="form.date.$error.required">*</span></label><br />
         <input class="form-control" type="date" min="1" max="10" ng-model="article.date" name="date" /><br />
-		<script>Modernizr.load({
-			test: Modernizr.inputtypes.date,
-			nope: [
-		       'scripts/jquery-1.10.2.js', 
-		       'scripts/jquery-ui.js', 
-		       'scripts/jquery.ui.datepicker-es.js',
-		       'http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css'
-			],
-			complete: function () {
-				$.datepicker.setDefaults($.datepicker.regional["es"]);
-				$('input[type=date]').datepicker({
-					changeMonth: true,
-					changeYear: true,
-					dateFormat: 'yy-mm-dd',
-					firstDay: 1
-    			});
-  			}
-		});
-    	</script>
+		
         <label for="description">Descripción: <span ng-show="form.description.$error.required">*</span></label><br />
         <textarea class="form-control" rows="6" cols="30" placeholder=" Añade una descripción..." ng-model="article.description" name="description" required></textarea><br />
 

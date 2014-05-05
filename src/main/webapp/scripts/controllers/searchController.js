@@ -25,7 +25,7 @@ define(['controllers/controllers'], function(controllers) {
             	 if ($scope.selectedCategory.name != 'Todo')
             		 $location.path("/" + $scope.selectedCategory.path + "/search/" + $scope.terms);
             	 else{
-            		 $location.path("/" + 'articles'+ "/search/" + $scope.terms);
+            		 $location.path("/" + 'articles/'+ "/search/" + $scope.terms);
             		
             	 }
              }
