@@ -9,22 +9,28 @@ define(['controllers/controllers'], function(controllers) {
         });
     }];
 
-    var articleAdd = ['$scope', '$resource', '$location',
-        function($scope, $resource, $location) {
+    var articleAdd = [
+        '$scope', '$location', 'Book', 'Comic', 'Movie', 'Music',
+        function($scope, $location, Book, Comic, Movie, Music) {
             $scope.categories = [
-                { name: 'Libros',    path: 'books'         },
-                { name: 'Cómics',    path: 'comics'        },
-                { name: 'Películas', path: 'movies'        },
-                { name: 'Música',    path: 'musicstorages' },
+                { name: 'Libros',    type: 'book',  service: Book  },
+                { name: 'Cómics',    type: 'comic', service: Comic },
+                { name: 'Películas', type: 'movie', service: Movie },
+                { name: 'Música',    type: 'music', service: Music },
             ];
 
             $scope.add = function(category) {
-                $resource('rest/' + category.path).save(
-                    $scope.article
+                $scope.article.type = category.type;
+                $scope.article.date = $scope.article.date.split('/').map(
+                    function(num) { return parseInt(num, 10); }
                 );
-                window.alert("Artículo " + $scope.article.name + " pendiente de moderación.");
-                                
-                $location.path("/" + category.path);
+
+                category.service.save({ }, $scope.article);
+
+                // maybe better to redirect and show message in the redirected
+                // page (a "flash" message), instead of using a plain old alert?
+                window.alert('Artículo ' + $scope.article.name + ' pendiente de moderación.');
+                $location.path("/");
             };
         }
     ];

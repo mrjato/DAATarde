@@ -3,25 +3,16 @@ package es.uvigo.esei.daa.tarde.iu.firefox;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import org.joda.time.LocalDate;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -29,16 +20,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import es.uvigo.esei.daa.tarde.daos.BaseDAOTest;
 import es.uvigo.esei.daa.tarde.daos.articles.BookDAO;
 import es.uvigo.esei.daa.tarde.entities.articles.Book;
-import org.openqa.selenium.Keys;
 
 @RunWith(Parameterized.class)
 public class IndexWebTest extends BaseDAOTest{
     private static final int DEFAULT_WAIT_TIME = 20;
     private WebDriver driver;
-    private StringBuffer verificationErrors = new StringBuffer();
-   
-    
-   
+    private final StringBuffer verificationErrors = new StringBuffer();
+
+
+
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[ ]> createBookData( ) {
         return Arrays.asList(new Object[ ][ ] {
@@ -76,7 +66,7 @@ public class IndexWebTest extends BaseDAOTest{
         this.bookList = Arrays.asList(bookList);
     }
 
-   
+
     @Before
     public void createBookDAO( ) {
         dao = new BookDAO();
@@ -92,36 +82,36 @@ public class IndexWebTest extends BaseDAOTest{
         }
         entityManager.getTransaction().commit();
     }
-    
+
     @Before
     public void setUp() throws Exception {
-        
-        
+
+
         final String baseUrl = "http://localhost:9080/DAATarde/";
-        
+
         driver = new FirefoxDriver();
         driver.get(baseUrl);
         driver.manage().addCookie(new Cookie("token", "bXJqYXRvOm1yamF0bw=="));
-        
+
         // Driver will wait DEFAULT_WAIT_TIME if it doesn't find and element.
         driver.manage().timeouts().implicitlyWait(DEFAULT_WAIT_TIME, TimeUnit.SECONDS);
-        
+
         driver.get(baseUrl);
         driver.findElement(By.id("footer"));
     }
-    
+
     @After
     public void tearDown() throws Exception {
-        
+
         driver.quit();
-        String verificationErrorString = verificationErrors.toString();
+        final String verificationErrorString = verificationErrors.toString();
         if (!"".equals(verificationErrorString)) {
             fail(verificationErrorString);
         }
     }
 
     @Test
-    //este test solo será pasado si hay 10 articulos en la BD 
+    //este test solo será pasado si hay 10 articulos en la BD
     public void index_can_show_ten_articles() throws Exception {
         verifyXpathCount("//div[@ng-repeat='article in articles']",10);
     }
@@ -129,34 +119,34 @@ public class IndexWebTest extends BaseDAOTest{
     @Test
     //pensado para 10 articles per page
     public void index_can_search_empty_category_todo() throws Exception {
-       
+
         driver.findElements(By.xpath("//input[@id='buscador']")).clear();
         final WebElement input = driver.findElement(By.xpath("//input[@id='buscador']"));
         input.sendKeys(Keys.RETURN);
         verifyXpathCount("//div[@ng-repeat='article in articles']",10);
-        
-       
+
+
     }
-    
+
    /* @Test
     //test funciona para 10 books en BD
     public void index_can_search_empty_category_books() throws Exception {
-        
+
         driver.findElements(By.xpath("//input[@id='buscador']")).clear();
         driver.finElements(By.className()
         final WebElement input = driver.findElement(By.xpath("//input[@id='buscador']"));
         input.sendKeys(Keys.RETURN);
         verifyXpathCount("//div[@ng-repeat='article in articles']",10);
-        
-       
+
+
     }*/
-    
+
 
     /*@Test
     public void testEdit() throws Exception {
         final String name = "Hol";
         final String surname = "Mund";
-        
+
         final String trId = driver.findElement(By.xpath("//tr[last()]")).getAttribute("id");
         driver.findElement(By.xpath("//tr[@id='" + trId + "']//a[text()='Edit']")).click();
         driver.findElement(By.name("name")).clear();
@@ -166,11 +156,11 @@ public class IndexWebTest extends BaseDAOTest{
         driver.findElement(By.id("btnSubmit")).click();
         waitForTextInElement(By.name("name"), "");
         waitForTextInElement(By.name("surname"), "");
-        
-        assertEquals(name, 
+
+        assertEquals(name,
             driver.findElement(By.xpath("//tr[@id='" + trId + "']/td[@class='name']")).getText()
         );
-        assertEquals(surname, 
+        assertEquals(surname,
             driver.findElement(By.xpath("//tr[@id='" + trId + "']/td[@class='surname']")).getText()
         );
     }
@@ -179,24 +169,24 @@ public class IndexWebTest extends BaseDAOTest{
     public void testDelete() throws Exception {
         final String trId = driver.findElement(By.xpath("//tr[last()]")).getAttribute("id");
         driver.findElement(By.xpath("(//a[contains(text(),'Delete')])[last()]")).click();
-        
+
         waitUntilNotFindElement(By.id(trId));
     }*/
-    
-    private boolean waitUntilNotFindElement(By by) {
+
+    private boolean waitUntilNotFindElement(final By by) {
         return new WebDriverWait(driver, DEFAULT_WAIT_TIME)
             .until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
-    
-    private boolean waitForTextInElement(By by, String text) {
+
+    private boolean waitForTextInElement(final By by, final String text) {
         return new WebDriverWait(driver, DEFAULT_WAIT_TIME)
             .until(ExpectedConditions.textToBePresentInElementLocated(by, text));
     }
 
-    private void verifyXpathCount(String xpath, int count) {
+    private void verifyXpathCount(final String xpath, final int count) {
         try {
             assertEquals(count, driver.findElements(By.xpath(xpath)).size());
-        } catch (Error e) {
+        } catch (final Error e) {
             verificationErrors.append(e.toString());
         }
     }

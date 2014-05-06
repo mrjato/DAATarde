@@ -5,9 +5,19 @@ define(['services/services'], function(services) {
         return $resource('rest/articles', { }, {
             search: {
                 method:  'GET',
-                params:  { search: '' },
+                params:  { search: '', page: '' },
                 isArray: true,
-            }
+            },
+            countSearch: {
+                method:  'GET',
+                params:  { search: '', count: true },
+                isArray: false,
+            },
+            latest: {
+                method:  'GET',
+                url:     'rest/articles/latest',
+                isArray: true,
+            },
         });
     }]);
 
