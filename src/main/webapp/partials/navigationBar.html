@@ -1,54 +1,24 @@
-<div class="navbar navbar-default menu_superior" role="navigation">
-	<button type="button" class="navbar-toggle visible-xs visible-sm"
-		data-toggle="collapse" data-target=".navbar-collapse">
-		<span class="sr-only">Desplegar menú</span> <span class="icon-bar">
-			<!-- empty -->
-		</span> <span class="icon-bar"> <!-- empty -->
-		</span> <span class="icon-bar"> <!-- empty -->
-		</span>
-	</button>
-
-	<div class="container visible-xs visible-sm">
-		<a class="navbar-brand" href="#">Tarde@DAA</a>
-	</div>
-
-	<div class="navbar-collapse collapse">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-2 hidden-xs hidden-sm">
-					<a class="navbar-brand">Tarde@DAA</a>
-				</div>
-				<div class="col-md-4">
-					<form class="nav navbar-form-group navbar-left" role="search"
-						ng-controller="SearchController">
-						<div class="input-group">
-							<input id="buscador" type="text" ng-keypress="enter($event)" class="form-control" placeholder="Búsqueda"
-								ng-model="terms">
-								<select class="form-control" id="buscador" ng-change=search(selectedCategory) ng-model="selectedCategory" ng-options="category.name for category in categories">
-								</select>
-						</div>
-						
-								
-						
-						
-					</form>
-				</div>
-				<div class="col-md-4">
-					<ul class="nav navbar-nav navbar-right">
-						<li>
-							<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle"
-									data-toggle="dropdown">
-									<i class="fa fa-plus"></i> Acciones <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu" role="menu">
-									<li><a href="#/articles/add"> A&ntildeadir Art&iacute;culo</a></li>
-								</ul>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="row">
+    <div class="navbar navbar-default" role="navigation">
+       <div class="col-xs-4">
+           <ul class="nav navbar-nav navbar-left">
+               <li><a href="#/articles/add"><i class="fa fa-plus"></i> Añadir Artículo</a></li>
+           </ul>
+       </div>
+       <div class="col-xs-8">
+           <form class="nav navbar-form navbar-right" role="search" ng-controller="SearchController">
+               <div class="input-group">
+                   <input type="text" class="form-control" placeholder="Búsqueda" ng-model="terms" ng-keypress="enter($event)">
+                   <div class="input-group-btn">
+                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                           {{ selectedCategory.name }} <span class="caret"></span>
+                       </button>
+                       <ul class="dropdown-menu pull-right">
+                           <li ng-repeat="category in categories"><a ng-click="search(category)">{{ category.name }}</a></li>
+                       </ul>
+                   </div>
+               </div>
+           </form>
+       </div>
+    </div>
 </div>

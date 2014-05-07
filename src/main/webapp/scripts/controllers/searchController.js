@@ -1,35 +1,31 @@
 define(['controllers/controllers'], function(controllers) {
     'use strict';
 
-    controllers.controller(
-        'SearchController',
-        ['$scope', '$location', function($scope, $location) {
-
+    controllers.controller('SearchController', [
+        '$scope', '$location', function($scope, $location) {
             $scope.terms = '';
 
             $scope.categories = [
-                { name: 'Todo', path: 'articles' },
-                { name: 'Libros', path: 'books' },
-                { name: 'Cómics', path: 'comics' },
-                { name: 'Películas', path: 'movies' },
-                { name: 'Música', path: 'music' },
+                { name: 'Todo',      path: '/articles'          },
+                { name: 'Libros',    path: '/articles/books'    },
+                { name: 'Cómics',    path: '/articles/comics'   },
+                { name: 'Películas', path: '/articles/movies'   },
+                { name: 'Música',    path: '/articles/music'    },
             ];
-            $scope.selectedCategory = $scope.categories[0];
-            
+
+            $scope.selectedCategory = $scope.categories.filter(function(c) {
+                return c.path === $location.path();
+            })[0] || $scope.categories[0];
+
             $scope.search = function(category) {
-                $location.path("/" + category.path + "/search/" + $scope.terms);
+                $scope.selectedCategory = category;
+                $location.path(category.path).search('search', $scope.terms);
             };
 
             $scope.enter = function(ev) {
-             if (ev.which==13) {
-                 if ($scope.selectedCategory.name != 'Todo')
-                     $location.path("/" + $scope.selectedCategory.path + "/search/" + $scope.terms);
-                 else
-                     $location.path("/" + 'articles/'+ "/search/" + $scope.terms);
-             }
+                if (ev.which == 13) $scope.search($scope.selectedCategory);
             };
-
-        }]
-    );
+        }
+    ]);
 
 });

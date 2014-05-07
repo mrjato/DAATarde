@@ -3,15 +3,12 @@ define(['services/services'], function(services) {
 
     services.factory('Music', ['$resource', function($resource) {
         return $resource('rest/articles/music', { }, {
-            search: {
-                method:  'GET',
-                params:  { search: '', page: '' },
-                isArray: true,
-            },
-            countSearch: {
-                method:  'GET',
-                params:  { search: '', count: true },
-                isArray: false,
+            count: {
+                method: 'GET',
+                params: { count: true },
+                transformResponse: [function(data, headers) {
+                    return { count: parseInt(data, 10) };
+                }]
             },
         });
     }]);

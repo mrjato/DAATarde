@@ -1,174 +1,56 @@
 /* main.css */
-#container2, #header, body, #footer {
-	width: 984px;
+body {
+    padding:     0;
+    margin:      0 auto;
+    width:       984px;
+/*  font-family: Verdana, Arial, Helvetica, sans-serif; */
 }
 
-#container2 {
-	margin: 0 auto;
-	text-align: left;
+#header {
+    height: 80px;
+}
+
+#footer {
+    padding:    7px 0;
+    border-top: 1px solid #999;
+    font-size:  10px;
+    text-align: right;
+}
+
+.article-description {
+    text-align: justify;
+}
+
+.article-thumbnail {
+    padding: 4px;
+    width: 180px;
+}
+
+.article-thumbnail img {
+    max-height: 240px;
 }
 
 
-body{
-	margin: 0 auto;
-	padding: 0;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	color: #000;
-	text-align: center; 
+.article-form-container {
+    width:  70%;
+    margin: 0 auto;
 }
 
-#menu_superior {
-	float: left;
-	width: 984px;
-	border-bottom: 1px solid #000;
-	padding: 3px 0;
-}
-
-
-@media(max-width : 984px) {
-    .navbar-header {
-        float: none;
-    }
-    .navbar-toggle {
-        display: block;
-    }
-    .navbar-collapse {
-        border-top: 1px solid transparent;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-    .navbar-collapse.collapse {
-        display: none !important;
-    }
-    .navbar-collapse.collapse.in {
-        display: block !important;
-    }
-    .navbar-nav {
-        float: none !important;
-        margin: 7.5px -15px;
-    }
-    .navbar-nav>li {
-        float: none;
-    }
-    .navbar-nav>li>a {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-}
-
-/* Para addArticles */
-input[type=date] {
-    line-height: 20px;
-}
-
-/* Para addArticles */
-.btn-group {
-    margin-top: 7%;
-}
-
-.btn-default {
-    margin-right:1%;
-    margin-left:1%;
-}
-
-/* Para addArticles */
-label {
-    float: left;
-    margin-top:5px;
-    /*width: 120px;*/
+.article-form-container label {
+    margin-top:  5px;
     font-weight: bold;
-    color: #777;
+    color:       #777;
 }
 
-/* Para addArticles */
-input[type=file] {
-    display: initial; 
-}
-
-/* Para addArticles */
-input, textarea {
+.article-form-container input, .article-form-container textarea {
     margin-bottom: 5px;
 }
 
-/* En addArticles, para que los botones de Submit y Cancelar estean centrados */
-#botonsSubmitCancelar {
-    margin-top:4%;
-    margin-left: 6%;
+.form-control[id="cat"] {
+    margin-bottom: 15px !important;
+}
+
+.article-form-container .buttons {
+    margin:     5px auto 15px;
     text-align: center;
-}
-
-/* Radio buttons de addArticles */
-#radioButtons {
-    margin-left: 2%;
-}
-
-input[type=radio], input[type=checkbox] {
-    margin: 0px 0 0;
-    margin-top: 1px \9;
-}
-
-#globalAddArticles {
-    margin-left: 20%;
-    margin-top: 5%;
-    margin-right: 20%;
-}
-
-br {
-    clear: left;
-}
-/*Para header*/
-#header logo {
-	display:block;
-}
-
-#logo {
-	height: 80px;
-}
-
-#logo_uvigo {
-	
-	background-image: url("../images/logo.jpg");
-	position: absolute;
-	top: 0;
-	width: 230px; 
-	height: 75px;
-	
-}
-
-#header img.derecha {
-	float: right;
-}
-
-.izquierda {
-	float:left;
-	position: absolute;
-	width: 230px; 
-	height: 75px;
-}
-
-#header img.izquierda{
-	float: left;
-}
-
-.img-responsive, .thumbnail > img, .thumbnail a > img, .carousel-inner > .item > img, .carousel-inner > .item > a > img {
-	width: 120px;
-	height: 120px;
-}
-
-#footer{
-	margin: 10px 0;
-	padding: 7px 0;
-	border-top: 1px solid #999;
-	font-size: 10px;
-	text-align: right;
-}
-
-.form-control[id="buscador"]
-{
-	width:inherit !important;
-}
-
-.form-control[id="comboCat"]
-{
-	margin-bottom:15px !important;
 }

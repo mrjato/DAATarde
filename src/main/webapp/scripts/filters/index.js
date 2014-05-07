@@ -1,1 +1,4 @@
-define(['filters/filters'], function( ) { });
+define([
+    'filters/filters',
+    'filters/range',
+], function( ) { });

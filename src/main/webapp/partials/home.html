@@ -1,29 +1,26 @@
 <div class="alert alert-danger alert-dismissable">
-	<button type="button" class="close" data-dismiss="alert"
-		aria-hidden="true">&times;</button>
-	<strong>¡Cuidado!</strong> Web en versión pre-alpha, sin
-	funcionalidades básicas implementadas.
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <strong>¡Cuidado!</strong> Web en versión pre-alpha, sin funcionalidades básicas implementadas.
 </div>
-<div class="jumbotron">
 <div class="row">
     <div ng-repeat="article in articles" class="panel panel-default">
         <div class="panel-heading" ng-switch on="article.type">
-        
+
             <h3 class="panel-title" ng-switch-when="book"><i class="fa fa-book" title="Libro"></i> <strong>{{ article.name }}</strong> ({{ article.date }}) </h3>
             <h3 class="panel-title" ng-switch-when="movie"><i class="fa fa-film" title="Pel&iacute;cula"></i> <strong>{{ article.name }}</strong> ({{ article.date }}) </h3>
             <h3 class="panel-title" ng-switch-when="music"><i class="fa fa-music" title="M&uacute;sica"></i> <strong>{{ article.name }}</strong> ({{ article.date }}) </h3>
             <h3 class="panel-title" ng-switch-when="comic"><i class="fa fa-comments-o" title="C&oacute;mic"></i> <strong>{{ article.name }}</strong> ({{ article.date }}) </h3>
-  
+
         </div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-3 col-md-2">
-                    <div class="thumbnail">
+                <div class="col-xs-3">
+                    <div class="thumbnail article-thumbnail">
                         <img ng-src="data:image/jpg;base64,{{ article.picture }}" />
                     </div>
                 </div>
-                <div class="hidden-xs col-sm-9 col-md-10">
-                    <p>{{ article.description }}</p>
+                <div class="col-xs-9">
+                    <p class="article-description">{{ article.description }}</p>
                 </div>
             </div>
         </div>
@@ -38,4 +35,3 @@
     </div>
 </div>
 
-</div>
