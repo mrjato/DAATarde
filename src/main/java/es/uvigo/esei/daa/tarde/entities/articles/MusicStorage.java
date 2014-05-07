@@ -1,5 +1,6 @@
 package es.uvigo.esei.daa.tarde.entities.articles;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -10,7 +11,15 @@ import org.joda.time.LocalDate;
 @Entity
 @Table(name = "music_storages")
 public class MusicStorage extends Article {
-
+	@Column(length = 150, nullable = true)
+	protected String author;
+	
+	@Column(length = 150, nullable = true)
+	protected String recordlabel;
+	
+	@Column(length = 150, nullable = true)
+	protected String tracks;
+	
     protected MusicStorage( ) {
         super();
     }
@@ -19,12 +28,39 @@ public class MusicStorage extends Article {
         final String    name,
         final String    description,
         final LocalDate date,
+        final String    author,
+        final String    recordlabel,
+        final String    tracks,
         final byte[ ]   picture
     ) {
         super(name, description, date, picture);
     }
 
-    public MusicStorage(final String name, final LocalDate date) {
+    public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getRecordlabel() {
+		return recordlabel;
+	}
+
+	public void setRecordlabel(String recordlabel) {
+		this.recordlabel = recordlabel;
+	}
+
+	public String getTracks() {
+		return tracks;
+	}
+
+	public void setTracks(String tracks) {
+		this.tracks = tracks;
+	}
+
+	public MusicStorage(final String name, final LocalDate date) {
         super(name, date);
     }
 

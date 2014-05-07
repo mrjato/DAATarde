@@ -17,7 +17,7 @@ public class BookTest {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Article's name cannot be null");
 
-        new Book(null, "description", new LocalDate(), new byte[ ] { 0 });
+        new Book(null, "description", new LocalDate(), "author", "editorial", new byte[ ] { 0 });
     }
 
     @Test
@@ -25,7 +25,7 @@ public class BookTest {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Article's description cannot be null");
 
-        new Book("name", null, new LocalDate(), new byte[ ] { 0 });
+        new Book("name", null, new LocalDate(), "author", "editorial", new byte[ ] { 0 });
     }
 
     @Test
@@ -33,7 +33,7 @@ public class BookTest {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Article's date cannot be null");
 
-        new Book("name", "description", null, new byte[ ] { 0 });
+        new Book("name", "description", null, "author", "editorial", new byte[ ] { 0 });
     }
 
     @Test
@@ -41,7 +41,23 @@ public class BookTest {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("Article's picture cannot be null");
 
-        new Book("name", "description", new LocalDate(), null);
+        new Book("name", "description", new LocalDate(), "author", "editorial", null);
+    }
+    
+    @Test
+    public void book_constructor_should_throw_exception_when_initialized_with_null_author( ) {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Article's author cannot be null");
+
+        new Book("name", "description", new LocalDate(), null, "editorial", new byte[ ] { 0 });
+    }
+    
+    @Test
+    public void book_constructor_should_throw_exception_when_initialized_with_null_editorial( ) {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("Article's editorial cannot be null");
+
+        new Book("name", "description", new LocalDate(), "author", null, new byte[ ] { 0 });
     }
 
     @Test
