@@ -43,33 +43,6 @@ public class MusicStorageTest {
 
         new MusicStorage("name", "description", new LocalDate(), "author", "recordlabel", "tracks", null);
     }
-    
-    @Test
-    public void music_storage_constructor_should_throw_exception_when_initialized_with_null_author( ) {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Article's author cannot be null");
-
-        new MusicStorage("name", "description", new LocalDate(), null, "recordlabel", "tracks", new byte[ ] { 0 });
-    }
-
-    
-    @Test
-    public void music_storage_constructor_should_throw_exception_when_initialized_with_null_recordlabel( ) {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Article's recordlabel cannot be null");
-
-        new MusicStorage("name", "description", new LocalDate(), "author", null, "tracks", new byte[ ] { 0 });
-    }
-
-    
-    @Test
-    public void music_storage_constructor_should_throw_exception_when_initialized_with_null_tracks( ) {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Article's tracks cannot be null");
-
-        new MusicStorage("name", "description", new LocalDate(), "author", "recordlabel", null, new byte[ ] { 0 });
-    }
-
 
     @Test
     public void music_storage_equality_contract_is_valid( ) {

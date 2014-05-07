@@ -43,22 +43,6 @@ public class BookTest {
 
         new Book("name", "description", new LocalDate(), "author", "editorial", null);
     }
-    
-    @Test
-    public void book_constructor_should_throw_exception_when_initialized_with_null_author( ) {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Article's author cannot be null");
-
-        new Book("name", "description", new LocalDate(), null, "editorial", new byte[ ] { 0 });
-    }
-    
-    @Test
-    public void book_constructor_should_throw_exception_when_initialized_with_null_editorial( ) {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Article's editorial cannot be null");
-
-        new Book("name", "description", new LocalDate(), "author", null, new byte[ ] { 0 });
-    }
 
     @Test
     public void book_equality_contract_is_valid( ) {

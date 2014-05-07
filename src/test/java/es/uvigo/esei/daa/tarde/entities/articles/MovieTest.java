@@ -43,30 +43,6 @@ public class MovieTest {
 
         new Movie("name", "description", new LocalDate(),"director", "duration", "genre", null);
     }
-    
-    @Test
-    public void movie_constructor_should_throw_exception_when_initialized_with_null_director( ) {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Article's director cannot be null");
-
-        new Movie("name", "description", new LocalDate(),null, "duration", "genre",  new byte[ ] { 0 });
-    }
-    
-    @Test
-    public void movie_constructor_should_throw_exception_when_initialized_with_null_duration( ) {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Article's duration cannot be null");
-
-        new Movie("name", "description", new LocalDate(),"director", null, "genre",  new byte[ ] { 0 });
-    }
-    
-    @Test
-    public void movie_constructor_should_throw_exception_when_initialized_with_null_genre( ) {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Article's genre cannot be null");
-
-        new Movie("name", "description", new LocalDate(),"director", "duration",null,  new byte[ ] { 0 });
-    }
 
     @Test
     public void movie_equality_contract_is_valid( ) {

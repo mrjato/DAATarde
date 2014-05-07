@@ -43,33 +43,6 @@ public class ComicTest {
 
         new Comic("name", "description", new LocalDate(),"serie","collection","editorial", null);
     }
-    
-    @Test
-    public void comic_constructor_should_throw_exception_when_initialized_with_null_serie( ) {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Article's serie cannot be null");
-
-        new Comic("name", "description", new LocalDate(),null,"collection","editorial",  new byte[ ] { 0 });
-    }
-
-    
-    @Test
-    public void comic_constructor_should_throw_exception_when_initialized_with_null_collection( ) {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Article's collection cannot be null");
-
-        new Comic("name", "description", new LocalDate(),"serie",null,"editorial",  new byte[ ] { 0 });
-    }
-
-    
-    @Test
-    public void comic_constructor_should_throw_exception_when_initialized_with_null_editorial( ) {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("Article's editorial cannot be null");
-
-        new Comic("name", "description", new LocalDate(),"serie","collection",null,  new byte[ ] { 0 });
-    }
-
 
     @Test
     public void comic_equality_contract_is_valid( ) {

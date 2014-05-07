@@ -1,8 +1,6 @@
 package es.uvigo.esei.daa.tarde.entities.articles;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -12,12 +10,13 @@ import org.joda.time.LocalDate;
 @Table(name = "books")
 
 public class Book extends Article {
-	@Column(length = 150, nullable = true)
-	protected String author;
-	
-	@Column(length = 150, nullable = true)
-	protected String editorial;
-	
+
+    @Column(length = 150, nullable = true)
+    private String author;
+
+    @Column(length = 150, nullable = true)
+    private String editorial;
+
     protected Book( ) {
         super();
     }
@@ -35,6 +34,22 @@ public class Book extends Article {
 
     public Book(final String name, final LocalDate date) {
         super(name, date);
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(final String author) {
+        this.author = author;
+    }
+
+    public String getEditorial() {
+        return editorial;
+    }
+
+    public void setEditorial(final String editorial) {
+        this.editorial = editorial;
     }
 
     @Override
@@ -55,26 +70,10 @@ public class Book extends Article {
         final Book that = (Book) obj;
         final EqualsBuilder builder = new EqualsBuilder();
 
-        builder.append(that.getName(), this.getName());
-        builder.append(that.getDate(), this.getDate());
+        builder.append(that.getName(), getName());
+        builder.append(that.getDate(), getDate());
 
         return builder.isEquals();
     }
 
-	public String getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	public String getEditorial() {
-		return editorial;
-	}
-
-	public void setEditorial(String editorial) {
-		this.editorial = editorial;
-	}
-    
 }
