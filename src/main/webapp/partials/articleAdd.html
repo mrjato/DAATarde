@@ -15,23 +15,44 @@
             </div>
         
             <div ng-switch-when="book">
-                <label for="bookFields">Campo Propio Libro: <span ng-show="form.bookField.$error.required">*</span></label><br />
-                <input class="form-control" type="text" ng-model="article.bookField" name="bookField" placeholder="..." /><br />
+                <label for="bookFields">Autor: <span ng-show="form.bookFieldAuthor.$error.required">*</span></label><br />
+	       		 <input class="form-control" type="text" ng-model="article.bookFieldAuthor" name="bookFieldAuthor" placeholder="Autor del Libro" required /><br />
+	       		 
+	       		 <label for="bookFields">Editorial: <span ng-show="form.bookFieldEditorial.$error.required">*</span></label><br />
+	       		 <input class="form-control" type="text" ng-model="article.bookFieldEditorial" name="bookFieldEditorial" placeholder="Editorial del Libro" required /><br />
             </div>
         
             <div ng-switch-when="movie">
-                <label for="movieFields">Campo Propio Pelicula: <span ng-show="form.movieField.$error.required">*</span></label><br />
-                <input class="form-control" type="text" ng-model="article.movieField" name="movieField" placeholder="..." /><br />
+               <label for="movieFields">Director: <span ng-show="form.movieFieldDirector.$error.required">*</span></label><br />
+        		<input class="form-control" type="text" ng-model="article.movieFieldDirector" name="movieFieldDirector" placeholder="Director de la Pel&iacute;cula" required /><br />
+        	
+        		<label for="movieFields">G&eacute;nero: <span ng-show="form.movieFieldGenre.$error.required">*</span></label><br />
+        		<input class="form-control" type="text" ng-model="article.movieFieldGenre" name="movieFieldGenre" placeholder="Comedia, acci&oacute;n, terror, ..." required /><br />
+        	
+        		<label for="movieFields">Duraci&oacute;n: <span ng-show="form.movieFieldDuration.$error.required">*</span></label><br />
+        		<input class="form-control" type="text" ng-model="article.movieFieldDuration" name="movieFieldDuration" placeholder="Minutos" required /><br />
             </div>
         
             <div ng-switch-when="comic">
-                <label for="comicFields">Campo Propio Comic: <span ng-show="form.comicField.$error.required">*</span></label><br />
-                <input class="form-control" type="text" ng-model="article.comicField" name="comicField" placeholder="..." /><br />
+                <label for="comicFields">Colecci&oacute;n: <span ng-show="form.comicFieldColection.$error.required">*</span></label><br />
+        		<input class="form-control" type="text" ng-model="article.comicFieldColection" name="comicFieldColection" placeholder="Marvel Comics, DC Comics, ..." required /><br />
+        	
+       		 	<label for="comicFields">Serie: <span ng-show="form.comicFieldSerie.$error.required">*</span></label><br />
+        		<input class="form-control" type="text" ng-model="article.comicFieldSerie" name="comicFieldSerie" placeholder="Spiderman, Capit&aacute;n Am&eacute;rica, ..." required /><br />
+        	
+        		<label for="comicFields">Editorial: <span ng-show="form.comicFieldEditorial.$error.required">*</span></label><br />
+        		<input class="form-control" type="text" ng-model="article.comicFieldEditorial" name="comicFieldEditorial" placeholder="Editorial del C&oacute;mic" required /><br />
             </div>
         
             <div ng-switch-when="music">
-                <label for="musicFields">Campo Propio Musica: <span ng-show="form.musicField.$error.required">*</span></label><br />
-                <input class="form-control" type="text" ng-model="article.musicField" name="musicField" placeholder="..." /><br />
+                <label for="musicFields">Grupo / Autor: <span ng-show="form.musicFieldAuthor.$error.required">*</span></label><br />
+        		<input class="form-control" type="text" ng-model="article.musicFieldAuthor" name="musicFieldAuthor" placeholder="Grupo/Autor del &Aacute;lbum" required /><br />
+        	
+        		<label for="musicFields">Discogr&aacute;fica: <span ng-show="form.musicFieldRecordLabel.$error.required">*</span></label><br />
+        		<input class="form-control" type="text" ng-model="article.musicFieldRecordLabel" name="musicFieldRecordLabel" placeholder="Discogr&aacute;fica del &Aacute;lbum" required /><br />
+        	
+        		<label for="musicFields">N&deg; Pistas: <span ng-show="form.musicFieldTracks.$error.required">*</span></label><br />
+        		<input class="form-control" type="text" ng-model="article.musicFieldTracks" name="musicFieldTracks" placeholder="N&deg; de Canciones del &Aacute;lbum" required /><br />
             </div>
         
             <div class="buttons">
