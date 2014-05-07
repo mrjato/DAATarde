@@ -4,5 +4,6 @@ define([
     'services/comicService',
     'services/movieService',
     'services/musicService',
-    'services/articleService'
+    'services/articleService',
+    'services/utilService'
 ], function( ) { });

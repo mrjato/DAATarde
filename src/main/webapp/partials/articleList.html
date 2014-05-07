@@ -2,7 +2,7 @@
     <div class="alert alert-info">
         <p>Se han encontrado un total de <strong>{{ totalCount }}</strong> artículos.</p>
     </div>
-    <div class="text-center" ng-if="totalCount >= 1">
+    <div class="text-center" ng-if="numPages > 1">
         <ul class="pagination">
             <li ng-class="{ disabled: currentPage == 1 }">
                 <a href ng-click='changePage(currentPage - 1)'>&laquo;</a>
@@ -49,7 +49,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="text-center" ng-if="totalCount >= 1">
+    <div class="text-center" ng-if="numPages > 1">
         <ul class="pagination">
             <li ng-class="{ disabled: currentPage == 1 }">
                 <a href ng-click='changePage(currentPage - 1)'>&laquo;</a>

@@ -9,30 +9,37 @@ define(['controllers/controllers'], function(controllers) {
             callback(articles);
         });
     };
-    
+
     var parseCounterPromise = function(counter, callback) {
         counter.$promise.then(function(counter) {
             callback(counter.count);
         });
     };
-    
+
+    var parseArticlesPerPagePromise = function(articlesPerPage, callback) {
+        articlesPerPage.$promise.then(function(counter) {
+            callback(articlesPerPage.number);
+        });
+    };
+
     var setScopedNumPages = function($scope) {
-        if ($scope.totalCount * $scope.articles.length !== 0) {
+        if ($scope.totalCount * $scope.articlesPerPage !== 0) {
             $scope.numPages = Math.ceil(
-                $scope.totalCount / $scope.articles.length
+                $scope.totalCount / $scope.articlesPerPage
             );
         }
     };
 
     var articleList = [
-        '$scope', '$routeParams', '$location', 'service',
-        function($scope, $routeParams, $location, service) {
+        '$scope', '$routeParams', '$location', 'Util', 'service',
+        function($scope, $routeParams, $location, Util, service) {
             var terms = $routeParams.search || '';
 
-            $scope.currentPage = parseInt($routeParams.page || '1', 10);
-            $scope.articles    = [ ];
-            $scope.numPages    = 1;
-            $scope.totalCount  = 0;
+            $scope.currentPage     = parseInt($routeParams.page || '1', 10);
+            $scope.articlesPerPage = 10;
+            $scope.articles        = [ ];
+            $scope.numPages        = 1;
+            $scope.totalCount      = 0;
 
             parseArticlePromise(
                 service.query({ search: terms, page: $scope.currentPage }),
@@ -43,12 +50,22 @@ define(['controllers/controllers'], function(controllers) {
                 service.count({ search: terms }),
                 function(totalCount) { $scope.totalCount = totalCount; }
             );
-            
+
+            parseArticlesPerPagePromise(
+                 Util.articlesPerPage(),function(articlesPerPage) {
+                     $scope.articlesPerPage = articlesPerPage;
+                 }
+            );
+
             $scope.$watch('totalCount', function(newValue, oldValue) {
                 setScopedNumPages($scope);
             });
 
             $scope.$watch('articles', function(newValue, oldValue) {
+                setScopedNumPages($scope);
+            });
+
+            $scope.$watch('articlesPerPage', function(newValue, oldValue) {
                 setScopedNumPages($scope);
             });
 

@@ -19,7 +19,9 @@ define(['controllers/controllers'], function(controllers) {
 
             $scope.search = function(category) {
                 $scope.selectedCategory = category;
-                $location.path(category.path).search('search', $scope.terms);
+                $location.path(category.path)
+                    .search('search', $scope.terms)
+                    .search('page', 1);
             };
 
             $scope.enter = function(ev) {
